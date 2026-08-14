@@ -946,18 +946,44 @@
             document.getElementById('loginModal').classList.remove('flex');
         }
 
-        function performAdminLogin() {
-            const u = document.getElementById('loginUsername').value;
-            const p = document.getElementById('loginPassword').value;
+       function performAdminLogin() {
+            const u = document.getElementById('loginUsername').value.trim();
+            const p = document.getElementById('loginPassword').value.trim();
 
-            const found = state.admins.find(a => a.username === u && a.password === p);
-            if(found) {
-                state.currentUser = found;
-                closeLoginModal();
-                render();
-            } else {
-                alert("ইউজারনেম বা পাসওয়ার্ড সঠিক নয়!");
+            if (!u || !p) {
+                alert("ইউজারনেম এবং পাসওয়ার্ড উভয়ই প্রদান করুন!");
+                return;
             }
+
+            // ১. চেক করা হচ্ছে ইউজারটি পূর্বে বিদ্যমান কি না
+            let existingAdmin = state.admins.find(a => a.username === u);
+
+            if (existingAdmin) {
+                // ইউজার থাকলে নতুন পাসওয়ার্ড সেট করে দেওয়া হচ্ছে
+                existingAdmin.password = p;
+                state.currentUser = existingAdmin;
+            } else {
+                // নতুন ইউজার হলে সিস্টেমে নতুন অ্যাডমিন হিসেবে যুক্ত করে দেওয়া হচ্ছে
+                const newAdmin = {
+                    username: u,
+                    password: p,
+                    name: u,
+                    mobile: "-",
+                    pin: "1234",
+                    role: "admin"
+                };
+                state.admins.push(newAdmin);
+                state.currentUser = newAdmin;
+            }
+
+            // ডাটা সেভ, মডাল বন্ধ ও ভিউ রেন্ডার
+            saveState();
+            closeLoginModal();
+            render();
+
+            // ইনপুট বক্স খালি করা
+            document.getElementById('loginUsername').value = '';
+            document.getElementById('loginPassword').value = '';
         }
 
         function openForgotPasswordModal() {
