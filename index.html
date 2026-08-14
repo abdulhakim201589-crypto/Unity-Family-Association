@@ -175,7 +175,7 @@
                 </div>
             </div>
 
-            <!-- Tab 3: Committee & Roles (Updated NID/Birth Reg) -->
+            <!-- Tab 3: Committee & Roles -->
             <div id="committeeTab" class="tab-content hidden">
                 <div id="adminCommitteeForm" class="hidden bg-slate-50 p-4 rounded-lg border mb-6">
                     <h3 class="font-bold text-sm text-indigo-900 mb-2">নতুন পরিচালনা পদবি/সভাপতি এন্ট্রি</h3>
@@ -201,6 +201,7 @@
                                 <th class="p-3 border">দায়িত্বপ্রাপ্ত নাম</th>
                                 <th class="p-3 border">মোবাইল নম্বর</th>
                                 <th class="p-3 border">এনআইডি / জন্ম নিবন্ধন নম্বর</th>
+                                <th class="p-3 border text-center admin-action-col hidden">অ্যাকশন</th>
                             </tr>
                         </thead>
                         <tbody id="committeeTableBody" class="text-sm"></tbody>
@@ -208,7 +209,7 @@
                 </div>
             </div>
 
-            <!-- Tab 4: General Members (Updated NID/Birth Reg) -->
+            <!-- Tab 4: General Members -->
             <div id="membersTab" class="tab-content hidden">
                 <div id="adminMemberForm" class="hidden bg-slate-50 p-4 rounded-lg border mb-6">
                     <h3 class="font-bold text-sm text-indigo-900 mb-2">সাধারণ সদস্য যোগ করুন</h3>
@@ -228,6 +229,7 @@
                                 <th class="p-3 border">সদস্যের নাম</th>
                                 <th class="p-3 border">মোবাইল নম্বর</th>
                                 <th class="p-3 border">এনআইডি / জন্ম নিবন্ধন নম্বর</th>
+                                <th class="p-3 border text-center admin-action-col hidden">অ্যাকশন</th>
                             </tr>
                         </thead>
                         <tbody id="memberTableBody" class="text-sm"></tbody>
@@ -263,6 +265,24 @@
             </div>
 
         </main>
+    </div>
+
+    <!-- Edit Modal Overlay -->
+    <div id="editModal" class="fixed inset-0 bg-slate-900/50 hidden items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-md p-6 relative">
+            <h3 class="text-lg font-bold text-slate-800 mb-4" id="modalTitle">তথ্য এডিট করুন</h3>
+            <input type="hidden" id="editType">
+            <input type="hidden" id="editIndex">
+            
+            <div class="space-y-3" id="modalFields">
+                <!-- Dynamic Input Fields will load here -->
+            </div>
+
+            <div class="flex justify-end gap-2 mt-6">
+                <button onclick="closeEditModal()" class="px-4 py-2 text-sm bg-slate-200 hover:bg-slate-300 rounded font-semibold text-slate-700">বাতিল</button>
+                <button onclick="saveEditedData()" class="px-4 py-2 text-sm bg-indigo-600 hover:bg-indigo-700 rounded font-semibold text-white">সংরক্ষণ করুন</button>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -332,6 +352,7 @@
             // Admin Toggle Visibility
             const roleBadge = document.getElementById('roleBadge');
             const adminBtn = document.getElementById('adminToggleBtn');
+            const actionCols = document.querySelectorAll('.admin-action-col');
 
             if(state.isAdmin) {
                 document.getElementById('adminMenu').classList.remove('hidden');
@@ -339,6 +360,8 @@
                 document.getElementById('adminMemberForm').classList.remove('hidden');
                 document.getElementById('adminChandaForm').classList.remove('hidden');
                 
+                actionCols.forEach(col => col.classList.remove('hidden'));
+
                 roleBadge.innerText = "অ্যাডমিন কন্ট্রোল মোড";
                 roleBadge.className = "bg-amber-500 text-xs px-3 py-1 rounded-full text-slate-900 font-bold";
                 adminBtn.innerHTML = `<i class="fa-solid fa-right-from-bracket mr-1"></i> লগআউট`;
@@ -348,6 +371,8 @@
                 document.getElementById('adminMemberForm').classList.add('hidden');
                 document.getElementById('adminChandaForm').classList.add('hidden');
                 
+                actionCols.forEach(col => col.classList.add('hidden'));
+
                 roleBadge.innerText = "সদস্য মোড (Live View)";
                 roleBadge.className = "bg-emerald-500 text-xs px-3 py-1 rounded-full text-white font-semibold";
                 adminBtn.innerHTML = `<i class="fa-solid fa-lock mr-1"></i> অ্যাডমিন লগইন`;
@@ -382,9 +407,9 @@
             // Render Committee Table
             let commHtml = "";
             if (state.committee.length === 0) {
-                commHtml = `<tr><td colspan="5" class="p-3 text-center text-slate-400">কোনো তথ্য পাওয়া যায়নি</td></tr>`;
+                commHtml = `<tr><td colspan="${state.isAdmin ? 6 : 5}" class="p-3 text-center text-slate-400">কোনো তথ্য পাওয়া যায়নি</td></tr>`;
             } else {
-                state.committee.forEach((c) => {
+                state.committee.forEach((c, idx) => {
                     const photoHtml = c.photo 
                         ? `<img src="${c.photo}" alt="${c.name}" class="w-10 h-10 rounded-full object-cover border border-slate-300 shadow-sm mx-auto">`
                         : `<div class="w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-sm mx-auto"><i class="fa-solid fa-user"></i></div>`;
@@ -396,6 +421,11 @@
                             <td class="p-3 border">${c.name}</td>
                             <td class="p-3 border">${c.mobile || '-'}</td>
                             <td class="p-3 border font-mono text-slate-600">${c.nid || '-'}</td>
+                            ${state.isAdmin ? `
+                            <td class="p-3 border text-center space-x-1">
+                                <button onclick="openEditModal('committee', ${idx})" class="bg-blue-100 hover:bg-blue-200 text-blue-700 text-xs px-2.5 py-1 rounded font-semibold"><i class="fa-solid fa-pen-to-square"></i> এডিট</button>
+                                <button onclick="deleteItem('committee', ${idx})" class="bg-red-100 hover:bg-red-200 text-red-600 text-xs px-2 py-1 rounded font-semibold"><i class="fa-solid fa-trash"></i></button>
+                            </td>` : ''}
                         </tr>`;
                 });
             }
@@ -404,7 +434,7 @@
             // Render Member Table
             let memHtml = "";
             if (state.members.length === 0) {
-                memHtml = `<tr><td colspan="4" class="p-3 text-center text-slate-400">কোনো সদস্য নিবন্ধিত নেই</td></tr>`;
+                memHtml = `<tr><td colspan="${state.isAdmin ? 5 : 4}" class="p-3 text-center text-slate-400">কোনো সদস্য নিবন্ধিত নেই</td></tr>`;
             } else {
                 state.members.forEach((m, idx) => {
                     memHtml += `
@@ -413,10 +443,118 @@
                             <td class="p-3 border font-semibold text-slate-800">${m.name}</td>
                             <td class="p-3 border">${m.mobile || '-'}</td>
                             <td class="p-3 border font-mono text-slate-600">${m.nid || '-'}</td>
+                            ${state.isAdmin ? `
+                            <td class="p-3 border text-center space-x-1">
+                                <button onclick="openEditModal('member', ${idx})" class="bg-blue-100 hover:bg-blue-200 text-blue-700 text-xs px-2.5 py-1 rounded font-semibold"><i class="fa-solid fa-pen-to-square"></i> এডিট</button>
+                                <button onclick="deleteItem('member', ${idx})" class="bg-red-100 hover:bg-red-200 text-red-600 text-xs px-2 py-1 rounded font-semibold"><i class="fa-solid fa-trash"></i></button>
+                            </td>` : ''}
                         </tr>`;
                 });
             }
             document.getElementById('memberTableBody').innerHTML = memHtml;
+        }
+
+        // Edit Modal Operations
+        function openEditModal(type, index) {
+            document.getElementById('editType').value = type;
+            document.getElementById('editIndex').value = index;
+            const fieldsContainer = document.getElementById('modalFields');
+            fieldsContainer.innerHTML = '';
+
+            if (type === 'committee') {
+                const item = state.committee[index];
+                document.getElementById('modalTitle').innerText = "কমিটি পদবি ও তথ্য এডিট";
+                fieldsContainer.innerHTML = `
+                    <div>
+                        <label class="block text-xs font-semibold mb-1">পদবি (Designation):</label>
+                        <input type="text" id="modalDesignation" value="${item.designation}" class="w-full p-2 border rounded text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold mb-1">সদস্যের নাম:</label>
+                        <input type="text" id="modalName" value="${item.name}" class="w-full p-2 border rounded text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold mb-1">মোবাইল নম্বর:</label>
+                        <input type="text" id="modalMobile" value="${item.mobile || ''}" class="w-full p-2 border rounded text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold mb-1">এনআইডি / জন্ম নিবন্ধন নম্বর:</label>
+                        <input type="text" id="modalNid" value="${item.nid || ''}" class="w-full p-2 border rounded text-sm">
+                    </div>
+                `;
+            } else if (type === 'member') {
+                const item = state.members[index];
+                document.getElementById('modalTitle').innerText = "সাধারণ সদস্য তথ্য এডিট";
+                fieldsContainer.innerHTML = `
+                    <div>
+                        <label class="block text-xs font-semibold mb-1">সদস্যের নাম:</label>
+                        <input type="text" id="modalName" value="${item.name}" class="w-full p-2 border rounded text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold mb-1">মোবাইল নম্বর:</label>
+                        <input type="text" id="modalMobile" value="${item.mobile || ''}" class="w-full p-2 border rounded text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold mb-1">এনআইডি / জন্ম নিবন্ধন নম্বর:</label>
+                        <input type="text" id="modalNid" value="${item.nid || ''}" class="w-full p-2 border rounded text-sm">
+                    </div>
+                `;
+            }
+
+            document.getElementById('editModal').classList.remove('hidden');
+            document.getElementById('editModal').classList.add('flex');
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').classList.add('hidden');
+            document.getElementById('editModal').classList.remove('flex');
+        }
+
+        function saveEditedData() {
+            const type = document.getElementById('editType').value;
+            const index = document.getElementById('editIndex').value;
+
+            const name = document.getElementById('modalName').value.trim();
+            const mobile = document.getElementById('modalMobile').value.trim();
+            const nid = document.getElementById('modalNid').value.trim();
+
+            if (!name) {
+                alert("সদস্যের নাম খালি রাখা যাবে না!");
+                return;
+            }
+
+            if (type === 'committee') {
+                const designation = document.getElementById('modalDesignation').value.trim();
+                state.committee[index] = {
+                    ...state.committee[index],
+                    designation: designation || state.committee[index].designation,
+                    name,
+                    mobile,
+                    nid
+                };
+            } else if (type === 'member') {
+                state.members[index] = {
+                    ...state.members[index],
+                    name,
+                    mobile,
+                    nid
+                };
+            }
+
+            saveState();
+            closeEditModal();
+            alert("তথ্য সফলভাবে আপডেট করা হয়েছে!");
+        }
+
+        function deleteItem(type, index) {
+            if (confirm("আপনি কি নিশ্চিত যে এই তথ্যটি মুছে ফেলতে চান?")) {
+                if (type === 'committee') {
+                    state.committee.splice(index, 1);
+                } else if (type === 'member') {
+                    state.members.splice(index, 1);
+                }
+                saveState();
+            }
         }
 
         // Toggle Admin State
