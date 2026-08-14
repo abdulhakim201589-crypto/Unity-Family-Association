@@ -911,23 +911,30 @@
         }
 
         function saveEditedData() {
-            const type = document.getElementById('editType').value;
-            const index = document.getElementById('editIndex').value;
+    const type = document.getElementById('editType').value;
+    const index = document.getElementById('editIndex').value;
 
-            if (type === 'committee') {
-                state.committee[index].designation = document.getElementById('editCommDesignation').value;
-                state.committee[index].name = document.getElementById('editCommName').value;
-                state.committee[index].mobile = document.getElementById('editCommMobile').value;
-                state.committee[index].nid = document.getElementById('editCommNid').value;
-            } else if (type === 'member') {
-                state.members[index].name = document.getElementById('editMemName').value;
-                state.members[index].mobile = document.getElementById('editMemMobile').value;
-                state.members[index].nid = document.getElementById('editMemNid').value;
-            }
+    if (type === 'admin') {
+        state.admins[index].name = document.getElementById('editAdminName').value;
+        state.admins[index].username = document.getElementById('editAdminUsername').value;
+        state.admins[index].password = document.getElementById('editAdminPassword').value;
+        state.admins[index].mobile = document.getElementById('editAdminMobile').value;
+        state.admins[index].pin = document.getElementById('editAdminPin').value;
+    } else if (type === 'committee') {
+        state.committee[index].designation = document.getElementById('editCommDesignation').value;
+        state.committee[index].name = document.getElementById('editCommName').value;
+        state.committee[index].mobile = document.getElementById('editCommMobile').value;
+        state.committee[index].nid = document.getElementById('editCommNid').value;
+    } else if (type === 'member') {
+        state.members[index].name = document.getElementById('editMemName').value;
+        state.members[index].mobile = document.getElementById('editMemMobile').value;
+        state.members[index].nid = document.getElementById('editMemNid').value;
+    }
 
-            saveState();
-            closeEditModal();
-        }
+    saveState();
+    closeEditModal();
+    render(); // এটি নতুন যোগ করা হয়েছে যাতে সেভ হওয়ার সাথে সাথে পেজে ডাটা আপডেট হয়
+}
 
         // Authentication & Modals
         function toggleAdminView() {
