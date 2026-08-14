@@ -3,326 +3,455 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>স্মার্ট সমিতি ম্যানেজমেন্ট পোর্টাল</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
+    <title>ঐক্য পরিবার সমিতি</title>
+    <!-- FontAwesome icons for professional icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Bengali Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Html2Pdf Library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
     <style>
-        body { font-family: 'Hind Siliguri', sans-serif; }
-        .tab-btn.active {
-            background-color: #3730a3;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f0f4f8;
+            color: #333;
+        }
+
+        /* Top Header Navigation */
+        .navbar {
+            background-color: #2e2a85;
             color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            background: #ffffff;
+            color: #2e2a85;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .brand-title h2 {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .brand-title p {
+            font-size: 12px;
+            color: #d0cde0;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.3s;
+        }
+
+        .btn-member {
+            background-color: #20c997;
+            color: white;
+        }
+
+        .btn-admin {
+            background-color: #ffc107;
+            color: #000;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        /* Main Container Layout */
+        .main-container {
+            display: flex;
+            gap: 25px;
+            max-width: 1300px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        /* Left Sidebar Menu */
+        .sidebar {
+            width: 280px;
+            background: white;
+            border-radius: 12px;
+            padding: 20px 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            height: fit-content;
+        }
+
+        .sidebar-title {
+            font-size: 13px;
+            color: #888;
+            margin-bottom: 12px;
+            padding-left: 10px;
+            text-transform: uppercase;
+        }
+
+        .nav-menu {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-item {
+            padding: 12px 16px;
+            border-radius: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+            color: #555;
+        }
+
+        .nav-item:hover {
+            background-color: #eef2ff;
+            color: #2e2a85;
+        }
+
+        .nav-item.active {
+            background-color: #2e2a85;
+            color: white;
+        }
+
+        .nav-item.active i {
+            color: white;
+        }
+
+        /* Right Content Area */
+        .content-area {
+            flex: 1;
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Top Bar inside Content Area */
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #edf2f7;
+        }
+
+        .month-selector select {
+            padding: 8px 14px;
+            border-radius: 6px;
+            border: 1px solid #cbd5e0;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .btn-pdf {
+            background-color: #e53e3e;
+            color: white;
+        }
+
+        /* Content Sections */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .section-title {
+            font-size: 18px;
+            color: #2e2a85;
+            border-left: 4px solid #2e2a85;
+            padding-left: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* Live Score Cards */
+        .live-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 18px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .card h4 {
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 8px;
+        }
+
+        .card .amount {
+            font-size: 22px;
+            font-weight: bold;
+            color: #1e293b;
+        }
+
+        .live-badge {
+            background: #ef4444;
+            color: white;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 12px;
+            vertical-align: middle;
+            animation: blink 1.5s infinite;
+        }
+
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0.4; }
+            100% { opacity: 1; }
+        }
+
+        /* Table Design */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        th {
+            background-color: #f1f5f9;
+            color: #334155;
         }
     </style>
 </head>
-<body class="bg-slate-100 min-h-screen text-slate-800">
+<body>
 
-    <!-- Header / Navbar -->
-    <header class="bg-indigo-900 text-white shadow-lg sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <div class="w-12 h-12 rounded-full bg-white text-indigo-900 font-bold flex items-center justify-center text-xl shadow" id="logoDisplay">
-                    ঐ
-                </div>
-                <div>
-                    <h1 class="text-xl font-bold tracking-wide" id="associationTitle">ঐক্য পরিবার সমিতি</h1>
-                    <p class="text-xs text-indigo-200">লাইভ সদস্য, হিসাব ও নোটিশ বোর্ড</p>
-                </div>
+    <!-- Header / Top Bar -->
+    <header class="navbar">
+        <div class="logo-section">
+            <div class="logo-icon">ঐ</div>
+            <div class="brand-title">
+                <h2>ঐক্য পরিবার সমিতি</h2>
+                <p>লাইভ সদস্য, হিসাব ও নোটিশ বোর্ড</p>
             </div>
-            <div class="flex items-center gap-2">
-                <span id="adminBadge" class="bg-amber-500 text-slate-900 text-xs font-bold px-3 py-1 rounded-full hidden">এডমিন অ্যাক্টিভ</span>
-                <button id="authBtn" onclick="toggleAuth()" class="bg-amber-400 hover:bg-amber-300 text-slate-900 font-semibold text-sm px-4 py-1.5 rounded-lg transition shadow">
-                    এডমিন লগইন
-                </button>
-            </div>
+        </div>
+        <div class="header-buttons">
+            <button class="btn btn-member"><i class="fa-solid fa-user-check"></i> সদস্য ভিউ</button>
+            <button class="btn btn-admin"><i class="fa-solid fa-lock"></i> এডমিন লগইন</button>
         </div>
     </header>
 
-    <!-- Main Container -->
-    <div class="max-w-7xl mx-auto px-4 py-6 grid grid-cols-1 md:grid-cols-4 gap-6">
+    <!-- Main Body Container -->
+    <div class="main-container">
 
-        <!-- Sidebar Navigation -->
-        <div class="md:col-span-1 bg-white rounded-2xl p-4 shadow-sm border border-slate-200 h-fit space-y-2">
-            <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 px-2">প্রধান মেনু</h2>
-            
-            <button onclick="switchTab('tab-notice')" id="btn-tab-notice" class="tab-btn active w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-3 transition hover:bg-indigo-50">
-                <i class="fa-solid fa-bullhorn w-5 text-center"></i> নোটিশ ও নিউজ
-            </button>
-            
-            <button onclick="switchTab('tab-members')" id="btn-tab-members" class="tab-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-3 transition hover:bg-indigo-50">
-                <i class="fa-solid fa-users w-5 text-center"></i> সদস্য তালিকা
-            </button>
+        <!-- Sidebar Navigation Menu -->
+        <aside class="sidebar">
+            <div class="sidebar-title">প্রধান মেনু</div>
+            <ul class="nav-menu">
+                <li class="nav-item active" onclick="switchTab('home')">
+                    <i class="fa-solid fa-house"></i> হোম ও কমিটি
+                </li>
+                <li class="nav-item" onclick="switchTab('about')">
+                    <i class="fa-solid fa-circle-info"></i> পরিচিতি ও বিস্তারিত
+                </li>
+                <li class="nav-item" onclick="switchTab('notice')">
+                    <i class="fa-solid fa-bullhorn"></i> নোটিশ ও নিউজ
+                </li>
+                <li class="nav-item" onclick="switchTab('ledger')">
+                    <i class="fa-solid fa-calculator"></i> মাসিক চাঁদা খতিয়ান
+                </li>
+                <li class="nav-item" onclick="switchTab('members')">
+                    <i class="fa-solid fa-users"></i> সদস্য তালিকা
+                </li>
+            </ul>
+        </aside>
 
-            <div id="adminMenuSection" class="pt-4 border-t border-slate-100 hidden">
-                <h2 class="text-xs font-bold text-amber-600 uppercase tracking-wider mb-2 px-2">এডমিন প্যানেল</h2>
-                <button onclick="switchTab('tab-settings')" id="btn-tab-settings" class="tab-btn w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-3 transition hover:bg-indigo-50">
-                    <i class="fa-solid fa-gear w-5 text-center"></i> সমিতি সেটিং
-                </button>
-            </div>
-        </div>
+        <!-- Right Side Dynamic Content Area -->
+        <main class="content-area">
 
-        <!-- Content Area -->
-        <div class="md:col-span-3 space-y-6">
-
-            <!-- TAB 1: Notice Board -->
-            <div id="tab-notice" class="tab-content space-y-6">
-                <!-- Admin Add Notice -->
-                <div id="addNoticeBox" class="bg-amber-50 rounded-2xl p-5 border border-amber-200 hidden">
-                    <h3 class="font-bold text-amber-900 mb-3 text-sm flex items-center gap-2">
-                        <i class="fa-solid fa-plus-circle"></i> নতুন নোটিশ প্রকাশ করুন
-                    </h3>
-                    <div class="space-y-3">
-                        <input type="text" id="noticeTitle" placeholder="নোটিশের শিরোনাম" class="w-full px-4 py-2 rounded-xl border border-amber-300 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500">
-                        <textarea id="noticeBody" rows="3" placeholder="বিস্তারিত নোটিশ..." class="w-full px-4 py-2 rounded-xl border border-amber-300 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"></textarea>
-                        <button onclick="publishNotice()" class="bg-amber-600 text-white font-semibold text-sm px-5 py-2 rounded-xl hover:bg-amber-700 transition">
-                            প্রকাশ করুন
-                        </button>
-                    </div>
+            <!-- Content Header (Month selector & PDF Button) -->
+            <div class="content-header">
+                <div class="month-selector">
+                    <label for="month">মাস নির্বাচন: </label>
+                    <select id="month">
+                        <option value="aug2026">আগস্ট ২০২৬</option>
+                        <option value="jul2026">জুলাই ২০২৬</option>
+                        <option value="jun2026">জুন ২০২৬</option>
+                    </select>
                 </div>
-
-                <!-- Notices List -->
-                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 space-y-4">
-                    <h2 class="text-lg font-bold text-indigo-950 flex items-center gap-2 border-b pb-3">
-                        <i class="fa-solid fa-bell text-amber-500"></i> লাইভ নোটিশ বোর্ড
-                    </h2>
-                    <div id="noticesContainer" class="space-y-4">
-                        <p class="text-slate-400 text-sm text-center py-4">লোডিং হচ্ছে...</p>
-                    </div>
-                </div>
+                <button class="btn btn-pdf"><i class="fa-solid fa-file-pdf"></i> PDF রিপোর্ট ডাউনলোড</button>
             </div>
 
-            <!-- TAB 2: Members List -->
-            <div id="tab-members" class="tab-content hidden space-y-6">
-                <!-- Admin Add Member -->
-                <div id="addMemberBox" class="bg-indigo-50 rounded-2xl p-5 border border-indigo-100 hidden">
-                    <h3 class="font-bold text-indigo-900 mb-3 text-sm flex items-center gap-2">
-                        <i class="fa-solid fa-user-plus"></i> নতুন সদস্য যোগ করুন
-                    </h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <input type="text" id="memName" placeholder="সদস্যের নাম" class="px-4 py-2 rounded-xl border border-indigo-200 text-sm">
-                        <input type="text" id="memPhone" placeholder="মোবাইল নম্বর" class="px-4 py-2 rounded-xl border border-indigo-200 text-sm">
-                        <input type="text" id="memRole" placeholder="পদবী (যেমন: সদস্য/ক্যাশিয়ার)" class="px-4 py-2 rounded-xl border border-indigo-200 text-sm">
-                        <button onclick="addMember()" class="bg-indigo-600 text-white font-semibold text-sm px-5 py-2 rounded-xl hover:bg-indigo-700 transition sm:col-span-2">
-                            সংরক্ষণ করুন
-                        </button>
+            <!-- TAB 1: Home / Live Updates -->
+            <div id="home" class="tab-content active">
+                <h3 class="section-title">লাইভ স্কোর ও সমিতির সামারি <span class="live-badge">LIVE</span></h3>
+                
+                <div class="live-cards-grid">
+                    <div class="card">
+                        <h4>মোট সংগৃহীত চাঁদা</h4>
+                        <div class="amount" id="totalFund">৳ ১,৫০,০০০</div>
+                    </div>
+                    <div class="card">
+                        <h4>চলতি মাসের আদায়</h4>
+                        <div class="amount" style="color: #10b981;">৳ ২৫,০০০</div>
+                    </div>
+                    <div class="card">
+                        <h4>মোট বকেয়া</h4>
+                        <div class="amount" style="color: #ef4444;">৳ ৫,০০০</div>
+                    </div>
+                    <div class="card">
+                        <h4>মোট সদস্য সংখ্যা</h4>
+                        <div class="amount">৫০ জন</div>
                     </div>
                 </div>
 
-                <!-- Members Table -->
-                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
-                    <h2 class="text-lg font-bold text-indigo-950 flex items-center gap-2 border-b pb-3 mb-4">
-                        <i class="fa-solid fa-users text-indigo-600"></i> সদস্য তালিকা
-                    </h2>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-sm text-slate-600">
-                            <thead class="bg-slate-50 text-slate-700 uppercase text-xs font-bold">
-                                <tr>
-                                    <th class="p-3">নাম</th>
-                                    <th class="p-3">পদবী</th>
-                                    <th class="p-3">মোবাইল</th>
-                                    <th class="p-3 text-right admin-only hidden">অ্যাকশন</th>
-                                </tr>
-                            </thead>
-                            <tbody id="membersTableBody" class="divide-y divide-slate-100">
-                                <tr><td colspan="4" class="p-4 text-center text-slate-400">লোডিং হচ্ছে...</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
+                <div style="background: #f8fafc; padding: 15px; border-radius: 8px;">
+                    <h4>কার্যনির্বাহী কমিটি ২০২৬:</h4>
+                    <p style="margin-top: 8px; color: #475569;">
+                        সভাপতি: মোঃ রফিকুল ইসলাম | সাধারণ সম্পাদক: তানভীর আহমেদ | কোষাধ্যক্ষ: হাসান মাহমুদ
+                    </p>
                 </div>
             </div>
 
-            <!-- TAB 3: Settings -->
-            <div id="tab-settings" class="tab-content hidden space-y-6">
-                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 space-y-4">
-                    <h2 class="text-lg font-bold text-indigo-950 border-b pb-3">সমিতি সেটিং</h2>
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">সমিতির নাম</label>
-                        <input type="text" id="settingTitleInput" class="w-full px-4 py-2 rounded-xl border border-slate-200 text-sm">
-                    </div>
-                    <button onclick="updateSettings()" class="bg-indigo-600 text-white font-semibold text-sm px-5 py-2 rounded-xl">
-                        সেভ করুন
-                    </button>
+            <!-- TAB 2: About / Overview -->
+            <div id="about" class="tab-content">
+                <h3 class="section-title">সমিতির পরিচিতি ও লক্ষ্য</h3>
+                <div style="background: #f8fafc; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0; color: #475569;">
+                    আমাদের সমিতির মূল লক্ষ্য হলো পারস্পরিক সাহায্য, সামাজিক উন্নয়ন এবং সদস্যদের সঞ্চয় বৃদ্ধি করা। আমরা দীর্ঘদিন ধরে সততার সাথে পরিচালিত হয়ে আসছি।
                 </div>
             </div>
 
-        </div>
+            <!-- TAB 3: Notice & News -->
+            <div id="notice" class="tab-content">
+                <h3 class="section-title">লাইভ নোটিশ বোর্ড</h3>
+                <ul style="list-style: none;">
+                    <li style="padding: 12px; border-bottom: 1px solid #e2e8f0;">📢 <strong>আগস্ট মাসের সাধারণ সভা:</strong> আগামী ২৫ আগস্ট ২০২৬ রাত ৮:০০ টায় জুম মিটিং অনুষ্ঠিত হবে।</li>
+                    <li style="padding: 12px; border-bottom: 1px solid #e2e8f0;">📢 <strong>চাঁদা পরিষদের শেষ তারিখ:</strong> আগস্ট মাসের চাঁদা আগামী ২০ তারিখের মধ্যে পরিশোধ করার অনুরোধ করা হচ্ছে।</li>
+                </ul>
+            </div>
+
+            <!-- TAB 4: Ledger -->
+            <div id="ledger" class="tab-content">
+                <h3 class="section-title">মাসিক চাঁদা খতিয়ান (আগস্ট ২০২৬)</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>আইডি</th>
+                            <th>নাম</th>
+                            <th>পজিশন</th>
+                            <th>অবস্থা</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>#১০১</td>
+                            <td>তানভীর আহমেদ</td>
+                            <td>সাধারণ সম্পাদক</td>
+                            <td><span style="color: green; font-weight: bold;">পরিশোধিত</span></td>
+                        </tr>
+                        <tr>
+                            <td>#১০২</td>
+                            <td>হাসান মাহমুদ</td>
+                            <td>কোষাধ্যক্ষ</td>
+                            <td><span style="color: red; font-weight: bold;">বকেয়া</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- TAB 5: Member List -->
+            <div id="members" class="tab-content">
+                <h3 class="section-title">সদস্য তালিকা</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>সদস্য নং</th>
+                            <th>নাম</th>
+                            <th>মোবাইল নম্বর</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>০১</td>
+                            <td>মোঃ রফিকুল ইসলাম</td>
+                            <td>০১৭০০০০০০০০</td>
+                        </tr>
+                        <tr>
+                            <td>০২</td>
+                            <td>তানভীর আহমেদ</td>
+                            <td>০১৮০০০০০০০০</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </main>
     </div>
 
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-
+    <!-- Tab Switching Script -->
     <script>
-        // 1. Firebase Config (Live Public Database)
-        const firebaseConfig = {
-            databaseURL: "https://samity-management-default-rtdb.asia-southeast1.firebasedatabase.app"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-
-        let isAdmin = false;
-
-        // Admin Auth
-        function toggleAuth() {
-            if (!isAdmin) {
-                let pass = prompt("এডমিন পাসওয়ার্ড দিন (ডিফল্ট: 1234):");
-                if (pass === "1234") {
-                    isAdmin = true;
-                    document.getElementById('adminBadge').classList.remove('hidden');
-                    document.getElementById('adminMenuSection').classList.remove('hidden');
-                    document.getElementById('addNoticeBox').classList.remove('hidden');
-                    document.getElementById('addMemberBox').classList.remove('hidden');
-                    document.getElementById('authBtn').innerText = "লগআউট";
-                    document.querySelectorAll('.admin-only').forEach(el => el.classList.remove('hidden'));
-                    renderMembers();
-                    renderNotices();
-                } else {
-                    alert("ভুল পাসওয়ার্ড!");
-                }
-            } else {
-                isAdmin = false;
-                document.getElementById('adminBadge').classList.add('hidden');
-                document.getElementById('adminMenuSection').classList.add('hidden');
-                document.getElementById('addNoticeBox').classList.add('hidden');
-                document.getElementById('addMemberBox').classList.add('hidden');
-                document.getElementById('authBtn').innerText = "এডমিন লগইন";
-                document.querySelectorAll('.admin-only').forEach(el => el.classList.add('hidden'));
-                switchTab('tab-notice');
-                renderMembers();
-                renderNotices();
-            }
-        }
-
-        // Switch Tabs
         function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-            document.getElementById(tabId).classList.remove('hidden');
-            document.getElementById('btn-' + tabId).classList.add('active');
+            // Hide all tabs
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            // Remove active class from menu items
+            const menuItems = document.querySelectorAll('.nav-item');
+            menuItems.forEach(item => item.classList.remove('active'));
+
+            // Show selected tab
+            document.getElementById(tabId).classList.add('active');
+
+            // Highlight selected menu
+            event.currentTarget.classList.add('active');
         }
-
-        // Live Notice Management
-        function publishNotice() {
-            let title = document.getElementById('noticeTitle').value;
-            let body = document.getElementById('noticeBody').value;
-            if (!title || !body) return alert("সব ঘর পূরণ করুন!");
-
-            db.ref('notices').push({
-                title: title,
-                body: body,
-                date: new Date().toLocaleDateString('bn-BD')
-            });
-
-            document.getElementById('noticeTitle').value = '';
-            document.getElementById('noticeBody').value = '';
-        }
-
-        function renderNotices() {
-            db.ref('notices').on('value', (snapshot) => {
-                const data = snapshot.val();
-                const container = document.getElementById('noticesContainer');
-                container.innerHTML = '';
-
-                if (!data) {
-                    container.innerHTML = '<p class="text-slate-400 text-sm text-center py-4">কোনো নোটিশ পাওয়া যায়নি।</p>';
-                    return;
-                }
-
-                Object.keys(data).reverse().forEach(key => {
-                    let n = data[key];
-                    container.innerHTML += `
-                        <div class="p-4 rounded-xl bg-slate-50 border border-slate-100 relative">
-                            <div class="text-xs text-slate-400 mb-1">${n.date}</div>
-                            <h3 class="font-bold text-slate-800 text-base mb-1">${n.title}</h3>
-                            <p class="text-sm text-slate-600 leading-relaxed">${n.body}</p>
-                            ${isAdmin ? `<button onclick="deleteNotice('${key}')" class="text-red-500 hover:text-red-700 text-xs font-bold absolute top-4 right-4"><i class="fa-solid fa-trash"></i></button>` : ''}
-                        </div>
-                    `;
-                });
-            });
-        }
-
-        function deleteNotice(key) {
-            if (confirm("নোটিশটি মুছে ফেলতে চান?")) {
-                db.ref('notices/' + key).remove();
-            }
-        }
-
-        // Live Member Management
-        function addMember() {
-            let name = document.getElementById('memName').value;
-            let phone = document.getElementById('memPhone').value;
-            let role = document.getElementById('memRole').value || 'সদস্য';
-
-            if (!name) return alert("সদস্যের নাম দিন!");
-
-            db.ref('members').push({ name, phone, role });
-
-            document.getElementById('memName').value = '';
-            document.getElementById('memPhone').value = '';
-            document.getElementById('memRole').value = '';
-        }
-
-        function renderMembers() {
-            db.ref('members').on('value', (snapshot) => {
-                const data = snapshot.val();
-                const tbody = document.getElementById('membersTableBody');
-                tbody.innerHTML = '';
-
-                if (!data) {
-                    tbody.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-slate-400">কোনো সদস্য যোগ করা হয়নি।</td></tr>';
-                    return;
-                }
-
-                Object.keys(data).forEach(key => {
-                    let m = data[key];
-                    tbody.innerHTML += `
-                        <tr>
-                            <td class="p-3 font-semibold text-slate-800">${m.name}</td>
-                            <td class="p-3"><span class="bg-indigo-50 text-indigo-700 text-xs px-2.5 py-1 rounded-full font-medium">${m.role}</span></td>
-                            <td class="p-3 text-slate-500">${m.phone || 'নেই'}</td>
-                            ${isAdmin ? `<td class="p-3 text-right"><button onclick="deleteMember('${key}')" class="text-red-500 hover:text-red-700 text-xs font-bold"><i class="fa-solid fa-trash"></i></button></td>` : ''}
-                        </tr>
-                    `;
-                });
-            });
-        }
-
-        function deleteMember(key) {
-            if (confirm("সদস্যকে তালিকা থেকে সরাতে চান?")) {
-                db.ref('members/' + key).remove();
-            }
-        }
-
-        // Settings
-        function updateSettings() {
-            let title = document.getElementById('settingTitleInput').value;
-            if (title) {
-                db.ref('settings/title').set(title);
-                alert("সেটিং সেভ হয়েছে!");
-            }
-        }
-
-        function loadSettings() {
-            db.ref('settings/title').on('value', (snapshot) => {
-                let val = snapshot.val();
-                if (val) {
-                    document.getElementById('associationTitle').innerText = val;
-                    document.getElementById('logoDisplay').innerText = val.charAt(0);
-                }
-            });
-        }
-
-        // Initial Load
-        renderNotices();
-        renderMembers();
-        loadSettings();
     </script>
 </body>
 </html>
