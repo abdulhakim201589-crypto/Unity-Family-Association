@@ -910,30 +910,58 @@
             document.getElementById('editModal').classList.remove('flex');
         }
 
-        function saveEditedData() {
-    const type = document.getElementById('editType').value;
-    const index = document.getElementById('editIndex').value;
+       function openEditModal(type, index) {
+    document.getElementById('editType').value = type;
+    document.getElementById('editIndex').value = index;
+    const container = document.getElementById('modalFields');
+    container.innerHTML = '';
 
     if (type === 'admin') {
-        state.admins[index].name = document.getElementById('editAdminName').value;
-        state.admins[index].username = document.getElementById('editAdminUsername').value;
-        state.admins[index].password = document.getElementById('editAdminPassword').value;
-        state.admins[index].mobile = document.getElementById('editAdminMobile').value;
-        state.admins[index].pin = document.getElementById('editAdminPin').value;
+        const item = state.admins[index];
+        document.getElementById('modalTitle').innerText = "অ্যাডমিন তথ্য পরিবর্তন";
+        container.innerHTML = `
+            <div>
+                <label class="block text-xs font-semibold mb-1">নাম:</label>
+                <input type="text" id="editAdminName" value="${item.name || ''}" class="w-full p-2 border rounded text-sm">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold mb-1">ইউজারনেম:</label>
+                <input type="text" id="editAdminUsername" value="${item.username || ''}" class="w-full p-2 border rounded text-sm" ${item.username === 'admin' ? 'disabled' : ''}>
+            </div>
+            <div>
+                <label class="block text-xs font-semibold mb-1">পাসওয়ার্ড:</label>
+                <input type="password" id="editAdminPassword" value="${item.password || ''}" class="w-full p-2 border rounded text-sm">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold mb-1">মোবাইল:</label>
+                <input type="text" id="editAdminMobile" value="${item.mobile || ''}" class="w-full p-2 border rounded text-sm">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold mb-1">সিকিউরিটি পিন:</label>
+                <input type="text" id="editAdminPin" value="${item.pin || ''}" class="w-full p-2 border rounded text-sm">
+            </div>
+        `;
     } else if (type === 'committee') {
-        state.committee[index].designation = document.getElementById('editCommDesignation').value;
-        state.committee[index].name = document.getElementById('editCommName').value;
-        state.committee[index].mobile = document.getElementById('editCommMobile').value;
-        state.committee[index].nid = document.getElementById('editCommNid').value;
+        const item = state.committee[index];
+        document.getElementById('modalTitle').innerText = "কমিটি তথ্য পরিবর্তন";
+        container.innerHTML = `
+            <div><label class="block text-xs font-semibold mb-1">পদবি:</label><input type="text" id="editCommDesignation" value="${item.designation || ''}" class="w-full p-2 border rounded text-sm"></div>
+            <div><label class="block text-xs font-semibold mb-1">নাম:</label><input type="text" id="editCommName" value="${item.name || ''}" class="w-full p-2 border rounded text-sm"></div>
+            <div><label class="block text-xs font-semibold mb-1">মোবাইল:</label><input type="text" id="editCommMobile" value="${item.mobile || ''}" class="w-full p-2 border rounded text-sm"></div>
+            <div><label class="block text-xs font-semibold mb-1">NID/জন্ম নিবন্ধন:</label><input type="text" id="editCommNid" value="${item.nid || ''}" class="w-full p-2 border rounded text-sm"></div>
+        `;
     } else if (type === 'member') {
-        state.members[index].name = document.getElementById('editMemName').value;
-        state.members[index].mobile = document.getElementById('editMemMobile').value;
-        state.members[index].nid = document.getElementById('editMemNid').value;
+        const item = state.members[index];
+        document.getElementById('modalTitle').innerText = "সদস্য তথ্য পরিবর্তন";
+        container.innerHTML = `
+            <div><label class="block text-xs font-semibold mb-1">নাম:</label><input type="text" id="editMemName" value="${item.name || ''}" class="w-full p-2 border rounded text-sm"></div>
+            <div><label class="block text-xs font-semibold mb-1">মোবাইল:</label><input type="text" id="editMemMobile" value="${item.mobile || ''}" class="w-full p-2 border rounded text-sm"></div>
+            <div><label class="block text-xs font-semibold mb-1">NID/জিমেইল:</label><input type="text" id="editMemNid" value="${item.nid || ''}" class="w-full p-2 border rounded text-sm"></div>
+        `;
     }
 
-    saveState();
-    closeEditModal();
-    render(); // এটি নতুন যোগ করা হয়েছে যাতে সেভ হওয়ার সাথে সাথে পেজে ডাটা আপডেট হয়
+    document.getElementById('editModal').classList.remove('hidden');
+    document.getElementById('editModal').classList.add('flex');
 }
 
         // Authentication & Modals
