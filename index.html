@@ -52,6 +52,9 @@
             <button onclick="switchTab('dashboardTab')" class="w-full text-left px-4 py-2.5 rounded-lg bg-indigo-50 text-indigo-700 font-medium hover:bg-indigo-100 transition flex items-center gap-2">
                 <i class="fa-solid fa-chart-pie"></i> ড্যাশবোর্ড হোম
             </button>
+            <button onclick="switchTab('chandaTab')" class="w-full text-left px-4 py-2.5 rounded-lg hover:bg-slate-100 transition flex items-center gap-2">
+                <i class="fa-solid fa-hand-holding-dollar text-emerald-600"></i> মাসিক চাঁদা রেজিস্টার
+            </button>
             <button onclick="switchTab('committeeTab')" class="w-full text-left px-4 py-2.5 rounded-lg hover:bg-slate-100 transition flex items-center gap-2">
                 <i class="fa-solid fa-sitemap"></i> পরিচালনা কমিটি ও পদবি
             </button>
@@ -84,17 +87,21 @@
 
             <!-- Tab 1: Dashboard Home -->
             <div id="dashboardTab" class="tab-content">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
                     <div class="bg-indigo-50 border-l-4 border-indigo-600 p-4 rounded-r-lg">
-                        <p class="text-xs text-indigo-600 font-semibold uppercase">মোট পরিচালনা সদস্য</p>
+                        <p class="text-xs text-indigo-600 font-semibold uppercase">পরিচালনা সদস্য</p>
                         <h3 class="text-2xl font-bold text-indigo-900" id="totalCommitteeCount">০</h3>
                     </div>
                     <div class="bg-emerald-50 border-l-4 border-emerald-600 p-4 rounded-r-lg">
-                        <p class="text-xs text-emerald-600 font-semibold uppercase">মোট সাধারণ সদস্য</p>
+                        <p class="text-xs text-emerald-600 font-semibold uppercase">সাধারণ সদস্য</p>
                         <h3 class="text-2xl font-bold text-emerald-900" id="totalMembersCount">০</h3>
                     </div>
+                    <div class="bg-teal-50 border-l-4 border-teal-600 p-4 rounded-r-lg">
+                        <p class="text-xs text-teal-600 font-semibold uppercase">মোট সংগৃহীত চাঁদা</p>
+                        <h3 class="text-2xl font-bold text-teal-900" id="totalChandaCollected">৳ ০</h3>
+                    </div>
                     <div class="bg-amber-50 border-l-4 border-amber-600 p-4 rounded-r-lg">
-                        <p class="text-xs text-amber-600 font-semibold uppercase">লাইব আপডেট স্ট্যাটাস</p>
+                        <p class="text-xs text-amber-600 font-semibold uppercase">লাইভ স্ট্যাটাস</p>
                         <h3 class="text-lg font-bold text-amber-900"><i class="fa-solid fa-signal text-emerald-500"></i> অনলাইন</h3>
                     </div>
                 </div>
@@ -103,54 +110,135 @@
                 </p>
             </div>
 
-            <!-- Tab 2: Committee & Roles (Independent Designation System) -->
+            <!-- Tab 2: Monthly Chanda / Collection Ledger (NEW) -->
+            <div id="chandaTab" class="tab-content hidden">
+                <!-- Admin Entry Form -->
+                <div id="adminChandaForm" class="hidden bg-slate-50 p-4 rounded-lg border mb-6">
+                    <h3 class="font-bold text-sm text-indigo-900 mb-3"><i class="fa-solid fa-plus-circle mr-1"></i> নতুন মাসিক চাঁদা এন্ট্রি করুন</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mb-3">
+                        <div>
+                            <label class="block text-xs font-semibold mb-1">সদস্য নির্বাচন করুন:</label>
+                            <select id="chandaMemberSelect" class="w-full p-2 border rounded text-sm bg-white"></select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold mb-1">মাস:</label>
+                            <select id="chandaMonth" class="w-full p-2 border rounded text-sm bg-white">
+                                <option value="জানুয়ারি">জানুয়ারি</option>
+                                <option value="ফেব্রুয়ারি">ফেব্রুয়ারি</option>
+                                <option value="মার্চ">মার্চ</option>
+                                <option value="এপ্রিল">এপ্রিল</option>
+                                <option value="মে">মে</option>
+                                <option value="জুন">জুন</option>
+                                <option value="জুলাই">জুলাই</option>
+                                <option value="আগস্ট">আগস্ট</option>
+                                <option value="সেপ্টেম্বর">সেপ্টেম্বর</option>
+                                <option value="অক্টোবর">অক্টোবর</option>
+                                <option value="নভেম্বর">নভেম্বর</option>
+                                <option value="ডিসেম্বর">ডিসেম্বর</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold mb-1">বছর:</label>
+                            <input type="number" id="chandaYear" value="2026" class="w-full p-2 border rounded text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold mb-1">টাকার পরিমাণ (৳):</label>
+                            <input type="number" id="chandaAmount" placeholder="যেমন: ৫০০" class="w-full p-2 border rounded text-sm">
+                        </div>
+                    </div>
+                    <button onclick="addChandaEntry()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-1.5 rounded text-sm font-semibold transition">
+                        চাঁদা জমা করুন
+                    </button>
+                </div>
+
+                <!-- Chanda Summary & Table -->
+                <div class="flex justify-between items-center mb-4 bg-emerald-50 p-3 rounded-lg border border-emerald-200">
+                    <div>
+                        <span class="text-xs font-bold text-emerald-800 uppercase">সর্বমোট সংগৃহীত চাঁদা:</span>
+                        <h4 class="text-xl font-bold text-emerald-900" id="chandaTotalSummary">৳ ০</h4>
+                    </div>
+                    <button onclick="clearChandaHistory()" id="adminChandaResetBtn" class="hidden text-xs bg-red-100 text-red-600 hover:bg-red-200 px-3 py-1 rounded font-semibold">
+                        রেকর্ড রিমুভ
+                    </button>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-700 text-sm">
+                                <th class="p-3 border text-center">ক্রমিক</th>
+                                <th class="p-3 border">সদস্যের নাম</th>
+                                <th class="p-3 border">মাস ও বছর</th>
+                                <th class="p-3 border">পরিমাণ (৳)</th>
+                                <th class="p-3 border">জমার তারিখ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="chandaTableBody" class="text-sm"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab 3: Committee & Roles -->
             <div id="committeeTab" class="tab-content hidden">
                 <div id="adminCommitteeForm" class="hidden bg-slate-50 p-4 rounded-lg border mb-6">
                     <h3 class="font-bold text-sm text-indigo-900 mb-2">নতুন পরিচালনা পদবি/সভাপতি এন্ট্রি</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
                         <input type="text" id="commDesignation" placeholder="পদবি (যেমন: সভাপতি/সম্পাদক)" class="p-2 border rounded text-sm">
                         <input type="text" id="commName" placeholder="ব্যক্তির নাম" class="p-2 border rounded text-sm">
                         <input type="text" id="commMobile" placeholder="মোবাইল নম্বর" class="p-2 border rounded text-sm">
+                        <input type="text" id="commNid" placeholder="ন্যাশনাল আইডি (NID) নম্বর" class="p-2 border rounded text-sm">
+                        <div class="md:col-span-2">
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">ছবি সিলেক্ট করুন (PNG/JPG ফাইল):</label>
+                            <input type="file" id="commPhotoFile" accept="image/png, image/jpeg, image/jpg" class="p-1.5 border rounded text-sm w-full bg-white">
+                        </div>
                     </div>
-                    <button onclick="addCommitteeMember()" class="mt-3 bg-indigo-600 text-white px-4 py-1.5 rounded text-sm">যুক্ত করুন</button>
+                    <button onclick="addCommitteeMember()" class="bg-indigo-600 text-white px-4 py-1.5 rounded text-sm">যুক্ত করুন</button>
                 </div>
 
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="bg-slate-100 text-slate-700 text-sm">
-                            <th class="p-3 border">পদবি (Designation)</th>
-                            <th class="p-3 border">দায়িত্বপ্রাপ্ত নাম</th>
-                            <th class="p-3 border">যোগাযোগ (মোবাইল)</th>
-                        </tr>
-                    </thead>
-                    <tbody id="committeeTableBody" class="text-sm"></tbody>
-                </table>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-700 text-sm">
+                                <th class="p-3 border text-center">ছবি</th>
+                                <th class="p-3 border">পদবি (Designation)</th>
+                                <th class="p-3 border">দায়িত্বপ্রাপ্ত নাম</th>
+                                <th class="p-3 border">মোবাইল নম্বর</th>
+                                <th class="p-3 border">ন্যাশনাল আইডি (NID)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="committeeTableBody" class="text-sm"></tbody>
+                    </table>
+                </div>
             </div>
 
-            <!-- Tab 3: General Members (Independent of Roles) -->
+            <!-- Tab 4: General Members -->
             <div id="membersTab" class="tab-content hidden">
                 <div id="adminMemberForm" class="hidden bg-slate-50 p-4 rounded-lg border mb-6">
                     <h3 class="font-bold text-sm text-indigo-900 mb-2">সাধারণ সদস্য যোগ করুন</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                         <input type="text" id="memName" placeholder="সদস্যের নাম" class="p-2 border rounded text-sm">
                         <input type="text" id="memMobile" placeholder="মোবাইল নম্বর" class="p-2 border rounded text-sm">
+                        <input type="text" id="memNid" placeholder="ন্যাশনাল আইডি (NID) নম্বর" class="p-2 border rounded text-sm">
                     </div>
                     <button onclick="addGeneralMember()" class="mt-3 bg-emerald-600 text-white px-4 py-1.5 rounded text-sm">সদস্য যোগ করুন</button>
                 </div>
 
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="bg-slate-100 text-slate-700 text-sm">
-                            <th class="p-3 border">ক্রমিক</th>
-                            <th class="p-3 border">সদস্যের নাম</th>
-                            <th class="p-3 border">মোবাইল নম্বর</th>
-                        </tr>
-                    </thead>
-                    <tbody id="memberTableBody" class="text-sm"></tbody>
-                </table>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-700 text-sm">
+                                <th class="p-3 border text-center">ক্রমিক</th>
+                                <th class="p-3 border">সদস্যের নাম</th>
+                                <th class="p-3 border">মোবাইল নম্বর</th>
+                                <th class="p-3 border">ন্যাশনাল আইডি (NID)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="memberTableBody" class="text-sm"></tbody>
+                    </table>
+                </div>
             </div>
 
-            <!-- Tab 4: Samity Settings (Admin Only) -->
+            <!-- Tab 5: Samity Settings -->
             <div id="samitySettingsTab" class="tab-content hidden">
                 <h3 class="font-bold mb-3">সমিতির নাম ও লোগো আপডেট</h3>
                 <div class="space-y-4 max-w-md">
@@ -159,14 +247,14 @@
                         <input type="text" id="settingSamityName" class="w-full p-2 border rounded text-sm">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold mb-1">লোগো (URL/Image Link):</label>
-                        <input type="text" id="settingSamityLogo" placeholder="https://example.com/logo.png" class="w-full p-2 border rounded text-sm">
+                        <label class="block text-xs font-bold mb-1">লোগো ছবি সিলেক্ট করুন (PNG/JPG):</label>
+                        <input type="file" id="settingLogoFile" accept="image/*" class="w-full p-1.5 border rounded text-sm bg-white">
                     </div>
                     <button onclick="saveSamitySettings()" class="bg-indigo-600 text-white px-4 py-2 rounded text-sm">সংরক্ষণ করুন</button>
                 </div>
             </div>
 
-            <!-- Tab 5: Backup System (Admin Only) -->
+            <!-- Tab 6: Backup System -->
             <div id="backupTab" class="tab-content hidden">
                 <h3 class="font-bold mb-3">ডাটাবেজ ব্যাকআপ সেকশন</h3>
                 <p class="text-xs text-slate-500 mb-4">আপনার সমস্ত সদস্য ডাটা ফাইল হিসেবে নামিয়ে সুরক্ষিত জায়গায় রাখতে পারেন।</p>
@@ -181,25 +269,37 @@
     </div>
 
     <script>
-        // Default Data State
+        // State Initialization
         let state = {
             isAdmin: false,
             samityName: "ঐক্য পরিবার সমিতি",
             logoUrl: "",
             committee: [
-                { designation: "সভাপতি", name: "মোহাম্মদ রহিম (অ-সদস্য)", mobile: "01700000001" },
-                { designation: "সাধারণ সম্পাদক", name: "আব্দুল করিম", mobile: "01800000002" }
+                { designation: "সভাপতি", name: "মোহাম্মদ রহিম (অ-সদস্য)", mobile: "01700000001", nid: "1990123456789", photo: "" },
+                { designation: "সাধারণ সম্পাদক", name: "আব্দুল করিম", mobile: "01800000002", nid: "1988987654321", photo: "" }
             ],
             members: [
-                { name: "আব্দুল করিম", mobile: "01800000002" },
-                { name: "জাকির হোসেন", mobile: "01900000003" }
+                { name: "আব্দুল করিম", mobile: "01800000002", nid: "1988987654321" },
+                { name: "জাকির হোসেন", mobile: "01900000003", nid: "1995456789012" }
+            ],
+            chandaCollections: [
+                { memberName: "আব্দুল করিম", month: "জানুয়ারি", year: "2026", amount: 500, date: "2026-01-10" },
+                { memberName: "জাকির হোসেন", month: "জানুয়ারি", year: "2026", amount: 500, date: "2026-01-12" }
             ]
         };
 
-        // Load Initial State
+        // Load State Safely
         function init() {
-            const savedData = localStorage.getItem('samity_state');
-            if (savedData) state = JSON.parse(savedData);
+            try {
+                const savedData = localStorage.getItem('samity_state');
+                if (savedData) {
+                    const parsed = JSON.parse(savedData);
+                    state = { ...parsed, isAdmin: false };
+                    if (!state.chandaCollections) state.chandaCollections = [];
+                }
+            } catch (e) {
+                console.error("ডাটা লোড করতে সমস্যা হয়েছে:", e);
+            }
             render();
         }
 
@@ -208,56 +308,129 @@
             render();
         }
 
-        // Render UI
+        // Render All Views
         function render() {
             // Header Info
             document.getElementById('headerSamityName').innerText = state.samityName;
+            document.getElementById('settingSamityName').value = state.samityName;
+
             if(state.logoUrl) {
                 document.getElementById('customLogo').src = state.logoUrl;
                 document.getElementById('customLogo').classList.remove('hidden');
                 document.getElementById('defaultLogo').classList.add('hidden');
+            } else {
+                document.getElementById('customLogo').classList.add('hidden');
+                document.getElementById('defaultLogo').classList.remove('hidden');
             }
 
-            // Stats
-            document.getElementById('totalCommitteeCount').innerText = state.committee.length;
-            document.getElementById('totalMembersCount').innerText = state.members.length;
+            // Calculate Chanda Total
+            let totalChanda = state.chandaCollections.reduce((sum, item) => sum + Number(item.amount || 0), 0);
 
-            // Admin Elements Visibility
+            // Stats Counters
+            document.getElementById('totalCommitteeCount').innerText = state.committee.length.toLocaleString('bn-BD');
+            document.getElementById('totalMembersCount').innerText = state.members.length.toLocaleString('bn-BD');
+            document.getElementById('totalChandaCollected').innerText = `৳ ${totalChanda.toLocaleString('bn-BD')}`;
+            document.getElementById('chandaTotalSummary').innerText = `৳ ${totalChanda.toLocaleString('bn-BD')}`;
+
+            // Admin Toggle Visibility
+            const roleBadge = document.getElementById('roleBadge');
+            const adminBtn = document.getElementById('adminToggleBtn');
+
             if(state.isAdmin) {
                 document.getElementById('adminMenu').classList.remove('hidden');
                 document.getElementById('adminCommitteeForm').classList.remove('hidden');
                 document.getElementById('adminMemberForm').classList.remove('hidden');
-                document.getElementById('roleBadge').innerText = "অ্যাডমিন কন্ট্রোল মোড";
-                document.getElementById('roleBadge').className = "bg-amber-500 text-xs px-3 py-1 rounded-full text-slate-900 font-bold";
+                document.getElementById('adminChandaForm').classList.remove('hidden');
+                document.getElementById('adminChandaResetBtn').classList.remove('hidden');
+                
+                roleBadge.innerText = "অ্যাডমিন কন্ট্রোল মোড";
+                roleBadge.className = "bg-amber-500 text-xs px-3 py-1 rounded-full text-slate-900 font-bold";
+                adminBtn.innerHTML = `<i class="fa-solid fa-right-from-bracket mr-1"></i> লগআউট`;
             } else {
                 document.getElementById('adminMenu').classList.add('hidden');
                 document.getElementById('adminCommitteeForm').classList.add('hidden');
                 document.getElementById('adminMemberForm').classList.add('hidden');
-                document.getElementById('roleBadge').innerText = "সদস্য মোড (Live View)";
-                document.getElementById('roleBadge').className = "bg-emerald-500 text-xs px-3 py-1 rounded-full text-white font-semibold";
+                document.getElementById('adminChandaForm').classList.add('hidden');
+                document.getElementById('adminChandaResetBtn').classList.add('hidden');
+                
+                roleBadge.innerText = "সদস্য মোড (Live View)";
+                roleBadge.className = "bg-emerald-500 text-xs px-3 py-1 rounded-full text-white font-semibold";
+                adminBtn.innerHTML = `<i class="fa-solid fa-lock mr-1"></i> অ্যাডমিন লগইন`;
             }
 
-            // Tables
-            let commHtml = "";
-            state.committee.forEach((c) => {
-                commHtml += `<tr><td class="p-3 border font-semibold">${c.designation}</td><td class="p-3 border">${c.name}</td><td class="p-3 border">${c.mobile}</td></tr>`;
+            // Render Member Selector inside Chanda Form
+            let memberOptions = `<option value="">-- সদস্য সিলেক্ট করুন --</option>`;
+            let allMemberNames = new Set([...state.committee.map(c => c.name), ...state.members.map(m => m.name)]);
+            allMemberNames.forEach(name => {
+                memberOptions += `<option value="${name}">${name}</option>`;
             });
+            document.getElementById('chandaMemberSelect').innerHTML = memberOptions;
+
+            // Render Chanda Table
+            let chandaHtml = "";
+            if (state.chandaCollections.length === 0) {
+                chandaHtml = `<tr><td colspan="5" class="p-3 text-center text-slate-400">কোনো চাঁদা আদায়ের রেকর্ড নেই</td></tr>`;
+            } else {
+                state.chandaCollections.forEach((item, idx) => {
+                    chandaHtml += `
+                        <tr class="hover:bg-slate-50 transition">
+                            <td class="p-3 border text-center font-medium w-12">${(idx + 1).toLocaleString('bn-BD')}</td>
+                            <td class="p-3 border font-semibold text-slate-800">${item.memberName}</td>
+                            <td class="p-3 border">${item.month} ${item.year}</td>
+                            <td class="p-3 border font-bold text-emerald-700">৳ ${Number(item.amount).toLocaleString('bn-BD')}</td>
+                            <td class="p-3 border text-slate-500 font-mono text-xs">${item.date || '-'}</td>
+                        </tr>`;
+                });
+            }
+            document.getElementById('chandaTableBody').innerHTML = chandaHtml;
+
+            // Render Committee Table
+            let commHtml = "";
+            if (state.committee.length === 0) {
+                commHtml = `<tr><td colspan="5" class="p-3 text-center text-slate-400">কোনো তথ্য পাওয়া যায়নি</td></tr>`;
+            } else {
+                state.committee.forEach((c) => {
+                    const photoHtml = c.photo 
+                        ? `<img src="${c.photo}" alt="${c.name}" class="w-10 h-10 rounded-full object-cover border border-slate-300 shadow-sm mx-auto">`
+                        : `<div class="w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-sm mx-auto"><i class="fa-solid fa-user"></i></div>`;
+
+                    commHtml += `
+                        <tr class="hover:bg-slate-50 transition">
+                            <td class="p-2 border text-center w-14">${photoHtml}</td>
+                            <td class="p-3 border font-semibold text-slate-800">${c.designation}</td>
+                            <td class="p-3 border">${c.name}</td>
+                            <td class="p-3 border">${c.mobile || '-'}</td>
+                            <td class="p-3 border font-mono text-slate-600">${c.nid || '-'}</td>
+                        </tr>`;
+                });
+            }
             document.getElementById('committeeTableBody').innerHTML = commHtml;
 
+            // Render Member Table
             let memHtml = "";
-            state.members.forEach((m, idx) => {
-                memHtml += `<tr><td class="p-3 border">${idx+1}</td><td class="p-3 border font-semibold">${m.name}</td><td class="p-3 border">${m.mobile}</td></tr>`;
-            });
+            if (state.members.length === 0) {
+                memHtml = `<tr><td colspan="4" class="p-3 text-center text-slate-400">কোনো সদস্য নিবন্ধিত নেই</td></tr>`;
+            } else {
+                state.members.forEach((m, idx) => {
+                    memHtml += `
+                        <tr class="hover:bg-slate-50 transition">
+                            <td class="p-3 border text-center font-medium w-12">${(idx + 1).toLocaleString('bn-BD')}</td>
+                            <td class="p-3 border font-semibold text-slate-800">${m.name}</td>
+                            <td class="p-3 border">${m.mobile || '-'}</td>
+                            <td class="p-3 border font-mono text-slate-600">${m.nid || '-'}</td>
+                        </tr>`;
+                });
+            }
             document.getElementById('memberTableBody').innerHTML = memHtml;
         }
 
-        // Admin Toggle
+        // Toggle Admin State
         function toggleAdminView() {
             if(!state.isAdmin) {
                 let pass = prompt("অ্যাডমিন সিকিউরিটি পিন দিন (ডিফল্ট: 1234):");
                 if(pass === "1234") {
                     state.isAdmin = true;
-                } else {
+                } else if (pass !== null) {
                     alert("ভুল পিন নম্বর!");
                 }
             } else {
@@ -266,51 +439,150 @@
             render();
         }
 
-        // Functions
+        // Tab Navigation
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             document.getElementById(tabId).classList.remove('hidden');
+
+            const titles = {
+                'dashboardTab': 'ড্যাশবোর্ড ওভারভিউ',
+                'chandaTab': 'মাসিক চাঁদা সংগ্রহ ও রেজিস্টার',
+                'committeeTab': 'পরিচালনা কমিটি ও পদবি খতিয়ান',
+                'membersTab': 'সাধারণ সদস্য তালিকা',
+                'samitySettingsTab': 'সমিতি ও লোগো সেটিং',
+                'backupTab': 'ডাটা ব্যাকআপ ও রিসেট'
+            };
+            document.getElementById('sectionTitle').innerText = titles[tabId] || 'ড্যাশবোর্ড';
         }
 
+        // Add Chanda Entry
+        function addChandaEntry() {
+            const memberName = document.getElementById('chandaMemberSelect').value;
+            const month = document.getElementById('chandaMonth').value;
+            const year = document.getElementById('chandaYear').value.trim();
+            const amount = document.getElementById('chandaAmount').value.trim();
+            const date = new Date().toISOString().slice(0, 10);
+
+            if (memberName && month && year && amount) {
+                state.chandaCollections.unshift({
+                    memberName,
+                    month,
+                    year,
+                    amount: Number(amount),
+                    date
+                });
+
+                // Clear Inputs
+                document.getElementById('chandaAmount').value = '';
+                saveState();
+                alert("মাসিক চাঁদা সফলভাবে জমা হয়েছে!");
+            } else {
+                alert("অনুগ্রহ করে সদস্য, মাস, বছর এবং চাঁদার পরিমাণ সঠিকভাবে দিন।");
+            }
+        }
+
+        // Add Committee Member
         function addCommitteeMember() {
-            let designation = document.getElementById('commDesignation').value;
-            let name = document.getElementById('commName').value;
-            let mobile = document.getElementById('commMobile').value;
-            if(designation && name) {
-                state.committee.push({ designation, name, mobile });
-                saveState();
+            const designation = document.getElementById('commDesignation').value.trim();
+            const name = document.getElementById('commName').value.trim();
+            const mobile = document.getElementById('commMobile').value.trim();
+            const nid = document.getElementById('commNid').value.trim();
+            const fileInput = document.getElementById('commPhotoFile');
+
+            if (designation && name) {
+                const processAndSave = (photoBase64) => {
+                    state.committee.push({ designation, name, mobile, nid, photo: photoBase64 });
+                    
+                    document.getElementById('commDesignation').value = '';
+                    document.getElementById('commName').value = '';
+                    document.getElementById('commMobile').value = '';
+                    document.getElementById('commNid').value = '';
+                    fileInput.value = '';
+
+                    saveState();
+                };
+
+                if (fileInput.files && fileInput.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        processAndSave(e.target.result);
+                    };
+                    reader.readAsDataURL(fileInput.files[0]);
+                } else {
+                    processAndSave("");
+                }
+            } else {
+                alert("অনুগ্রহ করে পদবি এবং নাম পূরণ করুন।");
             }
         }
 
+        // Add Member
         function addGeneralMember() {
-            let name = document.getElementById('memName').value;
-            let mobile = document.getElementById('memMobile').value;
-            if(name) {
-                state.members.push({ name, mobile });
+            const name = document.getElementById('memName').value.trim();
+            const mobile = document.getElementById('memMobile').value.trim();
+            const nid = document.getElementById('memNid').value.trim();
+
+            if (name) {
+                state.members.push({ name, mobile, nid });
+
+                document.getElementById('memName').value = '';
+                document.getElementById('memMobile').value = '';
+                document.getElementById('memNid').value = '';
+
                 saveState();
+            } else {
+                alert("অনুগ্রহ করে সদস্যের নাম পূরণ করুন।");
             }
         }
 
+        // Save Settings
         function saveSamitySettings() {
-            state.samityName = document.getElementById('settingSamityName').value || state.samityName;
-            state.logoUrl = document.getElementById('settingSamityLogo').value || state.logoUrl;
-            saveState();
-            alert("সেটিং সংরক্ষিত হয়েছে!");
+            const newName = document.getElementById('settingSamityName').value.trim();
+            const logoFileInput = document.getElementById('settingLogoFile');
+
+            if (newName) {
+                state.samityName = newName;
+
+                if (logoFileInput.files && logoFileInput.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        state.logoUrl = e.target.result;
+                        saveState();
+                        alert("সেটিং সংরক্ষিত হয়েছে!");
+                    };
+                    reader.readAsDataURL(logoFileInput.files[0]);
+                } else {
+                    saveState();
+                    alert("সেটিং সংরক্ষিত হয়েছে!");
+                }
+            } else {
+                alert("সমিতির নাম খালি রাখা যাবে না।");
+            }
         }
 
+        // Export Data
         function exportData() {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state));
+            const exportState = { ...state, isAdmin: false };
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportState, null, 2));
             const downloadAnchor = document.createElement('a');
             downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", "samity_backup.json");
+            downloadAnchor.setAttribute("download", `samity_backup_${new Date().toISOString().slice(0,10)}.json`);
             document.body.appendChild(downloadAnchor);
             downloadAnchor.click();
             downloadAnchor.remove();
         }
 
+        // Export PDF
         function downloadPDF() {
             const element = document.getElementById('pdfContent');
-            html2pdf().from(element).save('samity_report.pdf');
+            const opt = {
+                margin:       0.5,
+                filename:     `${state.samityName}_রিপোর্ট.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2 },
+                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+            html2pdf().set(opt).from(element).save();
         }
 
         window.onload = init;
