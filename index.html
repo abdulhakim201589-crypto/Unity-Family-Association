@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>সমিতি ড্যাশবোর্ড ও খতিয়ান</title>
+    <title>সমিতি ড্যাশবোর্ড ও খতিয়ান</title>
     <!-- Tailwind CSS for UI -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
@@ -32,12 +32,15 @@
             </div>
             <div>
                 <h1 id="headerSamityName" class="text-xl font-bold tracking-wide">ঐক্য পরিবার সমিতি</h1>
-                <p class="text-xs text-indigo-200">লাইভ সদস্য ও কমিটি খতিয়ান</p>
+                <p class="text-xs text-indigo-200">লাইভ সদস্য ও কমিটি খতিয়ান</p>
             </div>
         </div>
 
         <div class="flex items-center gap-3">
             <span id="roleBadge" class="bg-emerald-500 text-xs px-3 py-1 rounded-full text-white font-semibold">সদস্য মোড (Live View)</span>
+            <button onclick="openRegisterModal()" class="bg-teal-600 hover:bg-teal-700 text-white text-xs px-3 py-1.5 rounded font-bold transition">
+                <i class="fa-solid fa-user-plus mr-1"></i> রেজিস্ট্রেশন
+            </button>
             <button onclick="toggleAdminView()" id="adminToggleBtn" class="bg-amber-500 hover:bg-amber-600 text-slate-900 text-xs px-3 py-1.5 rounded font-bold transition">
                 <i class="fa-solid fa-lock mr-1"></i> অ্যাডমিন লগইন
             </button>
@@ -65,6 +68,9 @@
             <!-- Admin Only Settings Menu -->
             <div id="adminMenu" class="hidden border-t pt-3 mt-3 space-y-2">
                 <h2 class="text-sm font-bold text-amber-600 uppercase tracking-wider mb-2">অ্যাডমিন সেটিং</h2>
+                <button onclick="switchTab('adminManageTab')" class="w-full text-left px-4 py-2.5 rounded-lg hover:bg-amber-50 text-amber-800 transition flex items-center gap-2">
+                    <i class="fa-solid fa-user-shield"></i> অ্যাডমিন ম্যানেজমেন্ট
+                </button>
                 <button onclick="switchTab('samitySettingsTab')" class="w-full text-left px-4 py-2.5 rounded-lg hover:bg-amber-50 text-amber-800 transition flex items-center gap-2">
                     <i class="fa-solid fa-sliders"></i> সমিতি ও লোগো সেটিং
                 </button>
@@ -106,13 +112,12 @@
                     </div>
                 </div>
                 <p class="text-slate-600 leading-relaxed">
-                    এই সিস্টেমে সদস্যরা কেবল আপডেট ও প্রতিবেদন দেখতে পারেন। যেকোনো প্রকার পরিবর্তন অ্যাডমিন দ্বারা অনুমোদিত হওয়ার সাথে সাথে এখানে রিয়েল-টাইমে প্রদর্শিত হয়।
+                    এই সিস্টেমে সদস্যরা কেবল আপডেট ও প্রতিবেদন দেখতে পারেন। যেকোনো প্রকার পরিবর্তন অ্যাডমিন দ্বারা অনুমোদিত হওয়ার সাথে সাথে এখানে রিয়েল-টাইমে প্রদর্শিত হয়।
                 </p>
             </div>
 
             <!-- Tab 2: Monthly Chanda / Collection Ledger -->
             <div id="chandaTab" class="tab-content hidden">
-                <!-- Admin Entry Form -->
                 <div id="adminChandaForm" class="hidden bg-slate-50 p-4 rounded-lg border mb-6">
                     <h3 class="font-bold text-sm text-indigo-900 mb-3"><i class="fa-solid fa-plus-circle mr-1"></i> নতুন মাসিক চাঁদা এন্ট্রি করুন</h3>
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mb-3">
@@ -123,8 +128,8 @@
                         <div>
                             <label class="block text-xs font-semibold mb-1">মাস:</label>
                             <select id="chandaMonth" class="w-full p-2 border rounded text-sm bg-white">
-                                <option value="জানুয়ারি">জানুয়ারি</option>
-                                <option value="ফেব্রুয়ারি">ফেব্রুয়ারি</option>
+                                <option value="জানুয়ারি">জানুয়ারি</option>
+                                <option value="ফেব্রুয়ারি">ফেব্রুয়ারি</option>
                                 <option value="মার্চ">মার্চ</option>
                                 <option value="এপ্রিল">এপ্রিল</option>
                                 <option value="মে">মে</option>
@@ -151,7 +156,6 @@
                     </button>
                 </div>
 
-                <!-- Chanda Summary & Table -->
                 <div class="flex justify-between items-center mb-4 bg-emerald-50 p-3 rounded-lg border border-emerald-200">
                     <div>
                         <span class="text-xs font-bold text-emerald-800 uppercase">সর্বমোট সংগৃহীত চাঁদা:</span>
@@ -168,6 +172,7 @@
                                 <th class="p-3 border">মাস ও বছর</th>
                                 <th class="p-3 border">পরিমাণ (৳)</th>
                                 <th class="p-3 border">জমার তারিখ</th>
+                                <th class="p-3 border text-center admin-action-col hidden">অ্যাকশন</th>
                             </tr>
                         </thead>
                         <tbody id="chandaTableBody" class="text-sm"></tbody>
@@ -198,7 +203,7 @@
                             <tr class="bg-slate-100 text-slate-700 text-sm">
                                 <th class="p-3 border text-center">ছবি</th>
                                 <th class="p-3 border">পদবি (Designation)</th>
-                                <th class="p-3 border">দায়িত্বপ্রাপ্ত নাম</th>
+                                <th class="p-3 border">দায়িত্বপ্রাপ্ত নাম</th>
                                 <th class="p-3 border">মোবাইল নম্বর</th>
                                 <th class="p-3 border">এনআইডি / জন্ম নিবন্ধন নম্বর</th>
                                 <th class="p-3 border text-center admin-action-col hidden">অ্যাকশন</th>
@@ -216,7 +221,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                         <input type="text" id="memName" placeholder="সদস্যের নাম" class="p-2 border rounded text-sm">
                         <input type="text" id="memMobile" placeholder="মোবাইল নম্বর" class="p-2 border rounded text-sm">
-                        <input type="text" id="memNid" placeholder="NID অথবা জন্ম নিবন্ধন নম্বর" class="p-2 border rounded text-sm">
+                        <input type="text" id="memNid" placeholder="NID / জিমেইল আইডি" class="p-2 border rounded text-sm">
                     </div>
                     <button onclick="addGeneralMember()" class="mt-3 bg-emerald-600 text-white px-4 py-1.5 rounded text-sm">সদস্য যোগ করুন</button>
                 </div>
@@ -228,7 +233,7 @@
                                 <th class="p-3 border text-center">ক্রমিক</th>
                                 <th class="p-3 border">সদস্যের নাম</th>
                                 <th class="p-3 border">মোবাইল নম্বর</th>
-                                <th class="p-3 border">এনআইডি / জন্ম নিবন্ধন নম্বর</th>
+                                <th class="p-3 border">এনআইডি / জিমেইল</th>
                                 <th class="p-3 border text-center admin-action-col hidden">অ্যাকশন</th>
                             </tr>
                         </thead>
@@ -237,7 +242,42 @@
                 </div>
             </div>
 
-            <!-- Tab 5: Samity Settings -->
+            <!-- Tab 5: Admin Management -->
+            <div id="adminManageTab" class="tab-content hidden">
+                <div id="superAdminOnlyForm" class="bg-slate-50 p-4 rounded-lg border mb-6 hidden">
+                    <h3 class="font-bold text-sm text-indigo-900 mb-3"><i class="fa-solid fa-user-plus mr-1"></i> নতুন অ্যাডমিন যুক্ত করুন (প্রধান অ্যাডমিন)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+                        <input type="text" id="newAdminName" placeholder="অ্যাডমিনের নাম" class="p-2 border rounded text-sm">
+                        <input type="text" id="newAdminUsername" placeholder="ইউজারনেম (Login Username)" class="p-2 border rounded text-sm">
+                        <input type="text" id="newAdminMobile" placeholder="মোবাইল নম্বর" class="p-2 border rounded text-sm">
+                        <input type="password" id="newAdminPassword" placeholder="পাসওয়ার্ড" class="p-2 border rounded text-sm">
+                        <input type="text" id="newAdminSecurityPin" placeholder="সিকিউরিটি পিন (রিকভারির জন্য)" class="p-2 border rounded text-sm">
+                        <select id="newAdminRole" class="p-2 border rounded text-sm bg-white">
+                            <option value="admin">সহকারী অ্যাডমিন (Admin)</option>
+                            <option value="superadmin">প্রধান অ্যাডমিন (Super Admin)</option>
+                        </select>
+                    </div>
+                    <button onclick="addAdminUser()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-1.5 rounded text-sm">অ্যাডমিন যুক্ত করুন</button>
+                </div>
+
+                <h3 class="font-bold text-sm text-slate-700 mb-3">বর্তমান অ্যাডমিনদের তালিকা</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-700 text-sm">
+                                <th class="p-3 border">নাম</th>
+                                <th class="p-3 border">ইউজারনেম</th>
+                                <th class="p-3 border">মোবাইল</th>
+                                <th class="p-3 border">রোল / পদবি</th>
+                                <th class="p-3 border text-center">অ্যাকশন</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminListTableBody" class="text-sm"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab 6: Samity Settings -->
             <div id="samitySettingsTab" class="tab-content hidden">
                 <h3 class="font-bold mb-3">সমিতির নাম ও লোগো আপডেট</h3>
                 <div class="space-y-4 max-w-md">
@@ -253,10 +293,10 @@
                 </div>
             </div>
 
-            <!-- Tab 6: Backup System -->
+            <!-- Tab 7: Backup System -->
             <div id="backupTab" class="tab-content hidden">
                 <h3 class="font-bold mb-3">ডাটাবেজ ব্যাকআপ সেকশন</h3>
-                <p class="text-xs text-slate-500 mb-4">আপনার সমস্ত সদস্য ডাটা ফাইল হিসেবে নামিয়ে সুরক্ষিত জায়গায় রাখতে পারেন।</p>
+                <p class="text-xs text-slate-500 mb-4">আপনার সমস্ত সদস্য ডাটা ফাইল হিসেবে নামিয়ে সুরক্ষিত জায়গায় রাখতে পারেন।</p>
                 <div class="flex gap-3">
                     <button onclick="exportData()" class="bg-slate-800 text-white px-4 py-2 rounded text-sm flex items-center gap-2">
                         <i class="fa-solid fa-download"></i> ব্যাকআপ নামান (JSON Export)
@@ -267,7 +307,77 @@
         </main>
     </div>
 
-    <!-- Edit Modal Overlay -->
+    <!-- Admin Login Modal -->
+    <div id="loginModal" class="fixed inset-0 bg-slate-900/50 hidden items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-sm p-6 relative">
+            <h3 class="text-lg font-bold text-slate-800 mb-4 text-center"><i class="fa-solid fa-user-lock text-indigo-600 mr-2"></i>অ্যাডমিন লগইন</h3>
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-xs font-semibold mb-1">ইউজারনেম:</label>
+                    <input type="text" id="loginUsername" placeholder="যেমন: admin" class="w-full p-2 border rounded text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold mb-1">পাসওয়ার্ড:</label>
+                    <input type="password" id="loginPassword" placeholder="পাসওয়ার্ড দিন" class="w-full p-2 border rounded text-sm">
+                </div>
+            </div>
+            <div class="flex justify-between items-center mt-4">
+                <button onclick="openForgotPasswordModal()" class="text-xs text-indigo-600 hover:underline">পাসওয়ার্ড ভুলে গেছেন?</button>
+            </div>
+            <div class="flex justify-end gap-2 mt-6">
+                <button onclick="closeLoginModal()" class="px-4 py-2 text-sm bg-slate-200 hover:bg-slate-300 rounded font-semibold text-slate-700">বাতিল</button>
+                <button onclick="performAdminLogin()" class="px-4 py-2 text-sm bg-indigo-600 hover:bg-indigo-700 rounded font-semibold text-white">লগইন</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div id="forgotModal" class="fixed inset-0 bg-slate-900/50 hidden items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-sm p-6 relative">
+            <h3 class="text-lg font-bold text-slate-800 mb-3 text-center">পাসওয়ার্ড রিসেট করুন</h3>
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-xs font-semibold mb-1">ইউজারনেম:</label>
+                    <input type="text" id="forgotUsername" placeholder="ইউজারনেম লিখুন" class="w-full p-2 border rounded text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold mb-1">সিকিউরিটি পিন:</label>
+                    <input type="text" id="forgotPin" placeholder="সিকিউরিটি পিন লিখুন" class="w-full p-2 border rounded text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold mb-1">নতুন পাসওয়ার্ড:</label>
+                    <input type="password" id="forgotNewPass" placeholder="নতুন পাসওয়ার্ড দিন" class="w-full p-2 border rounded text-sm">
+                </div>
+            </div>
+            <div class="flex justify-end gap-2 mt-6">
+                <button onclick="closeForgotModal()" class="px-4 py-2 text-sm bg-slate-200 hover:bg-slate-300 rounded font-semibold text-slate-700">বাতিল</button>
+                <button onclick="resetPasswordProcess()" class="px-4 py-2 text-sm bg-emerald-600 hover:bg-emerald-700 rounded font-semibold text-white">পাসওয়ার্ড পরিবর্তন</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Registration Modal (Gmail Only) -->
+    <div id="registerModal" class="fixed inset-0 bg-slate-900/50 hidden items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-md p-6 relative">
+            <h3 class="text-lg font-bold text-slate-800 mb-4 text-center"><i class="fa-solid fa-id-card text-teal-600 mr-2"></i>নতুন সদস্য রেজিস্ট্রেশন</h3>
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-xs font-semibold mb-1">আপনার পূর্ণ নাম:</label>
+                    <input type="text" id="regName" placeholder="পূর্ণ নাম লিখুন" class="w-full p-2 border rounded text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold mb-1">জিমেইল আইডি (Gmail Address):</label>
+                    <input type="email" id="regGmail" placeholder="example@gmail.com" class="w-full p-2 border rounded text-sm">
+                </div>
+            </div>
+            <div class="flex justify-end gap-2 mt-6">
+                <button onclick="closeRegisterModal()" class="px-4 py-2 text-sm bg-slate-200 hover:bg-slate-300 rounded font-semibold text-slate-700">বাতিল</button>
+                <button onclick="submitUserRegistration()" class="px-4 py-2 text-sm bg-teal-600 hover:bg-teal-700 rounded font-semibold text-white">আবেদন জমা দিন</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal Overlay (Data & Admin Edit) -->
     <div id="editModal" class="fixed inset-0 bg-slate-900/50 hidden items-center justify-center z-50 p-4">
         <div class="bg-white rounded-xl shadow-xl w-full max-w-md p-6 relative">
             <h3 class="text-lg font-bold text-slate-800 mb-4" id="modalTitle">তথ্য এডিট করুন</h3>
@@ -288,20 +398,24 @@
     <script>
         // State Initialization
         let state = {
-            isAdmin: false,
+            currentUser: null, // logged-in admin object
             samityName: "ঐক্য পরিবার সমিতি",
             logoUrl: "",
+            admins: [
+                { username: "admin", password: "123", name: "প্রধান অ্যাডমিন", mobile: "01700000000", pin: "1234", role: "superadmin" },
+                { username: "admin2", password: "123", name: "সহকারী অ্যাডমিন", mobile: "01800000000", pin: "5678", role: "admin" }
+            ],
             committee: [
                 { designation: "সভাপতি", name: "মোহাম্মদ রহিম (অ-সদস্য)", mobile: "01700000001", nid: "1990123456789", photo: "" },
                 { designation: "সাধারণ সম্পাদক", name: "আব্দুল করিম", mobile: "01800000002", nid: "20019876543210123", photo: "" }
             ],
             members: [
-                { name: "আব্দুল করিম", mobile: "01800000002", nid: "20019876543210123" },
-                { name: "জাকির হোসেন", mobile: "01900000003", nid: "1995456789012" }
+                { name: "আব্দুল করিম", mobile: "01800000002", nid: "karim@gmail.com" },
+                { name: "জাকির হোসেন", mobile: "01900000003", nid: "jakir@gmail.com" }
             ],
             chandaCollections: [
-                { memberName: "আব্দুল করিম", month: "জানুয়ারি", year: "2026", amount: 500, date: "2026-01-10" },
-                { memberName: "জাকির হোসেন", month: "জানুয়ারি", year: "2026", amount: 500, date: "2026-01-12" }
+                { memberName: "আব্দুল করিম", month: "জানুয়ারি", year: "2026", amount: 500, date: "2026-01-10" },
+                { memberName: "জাকির হোসেন", month: "জানুয়ারি", year: "2026", amount: 500, date: "2026-01-12" }
             ]
         };
 
@@ -311,11 +425,12 @@
                 const savedData = localStorage.getItem('samity_state');
                 if (savedData) {
                     const parsed = JSON.parse(savedData);
-                    state = { ...parsed, isAdmin: false };
+                    state = { ...parsed, currentUser: null };
                     if (!state.chandaCollections) state.chandaCollections = [];
+                    if (!state.admins) state.admins = [];
                 }
             } catch (e) {
-                console.error("ডাটা লোড করতে সমস্যা হয়েছে:", e);
+                console.error("ডাটা লোড করতে সমস্যা হয়েছে:", e);
             }
             render();
         }
@@ -354,7 +469,7 @@
             const adminBtn = document.getElementById('adminToggleBtn');
             const actionCols = document.querySelectorAll('.admin-action-col');
 
-            if(state.isAdmin) {
+            if(state.currentUser) {
                 document.getElementById('adminMenu').classList.remove('hidden');
                 document.getElementById('adminCommitteeForm').classList.remove('hidden');
                 document.getElementById('adminMemberForm').classList.remove('hidden');
@@ -362,7 +477,13 @@
                 
                 actionCols.forEach(col => col.classList.remove('hidden'));
 
-                roleBadge.innerText = "অ্যাডমিন কন্ট্রোল মোড";
+                if(state.currentUser.role === 'superadmin') {
+                    document.getElementById('superAdminOnlyForm').classList.remove('hidden');
+                } else {
+                    document.getElementById('superAdminOnlyForm').classList.add('hidden');
+                }
+
+                roleBadge.innerText = `${state.currentUser.name} (${state.currentUser.role === 'superadmin' ? 'প্রধান' : 'সহকারী'})`;
                 roleBadge.className = "bg-amber-500 text-xs px-3 py-1 rounded-full text-slate-900 font-bold";
                 adminBtn.innerHTML = `<i class="fa-solid fa-right-from-bracket mr-1"></i> লগআউট`;
             } else {
@@ -389,7 +510,7 @@
             // Render Chanda Table
             let chandaHtml = "";
             if (state.chandaCollections.length === 0) {
-                chandaHtml = `<tr><td colspan="5" class="p-3 text-center text-slate-400">কোনো চাঁদা আদায়ের রেকর্ড নেই</td></tr>`;
+                chandaHtml = `<tr><td colspan="6" class="p-3 text-center text-slate-400">কোনো চাঁদা আদায়ের রেকর্ড নেই</td></tr>`;
             } else {
                 state.chandaCollections.forEach((item, idx) => {
                     chandaHtml += `
@@ -398,7 +519,10 @@
                             <td class="p-3 border font-semibold text-slate-800">${item.memberName}</td>
                             <td class="p-3 border">${item.month} ${item.year}</td>
                             <td class="p-3 border font-bold text-emerald-700">৳ ${Number(item.amount).toLocaleString('bn-BD')}</td>
-                            <td class="p-3 border text-slate-500 font-mono text-xs">${item.date || '-'}</td>
+                            <td class="p-3 border text-xs text-slate-500">${item.date}</td>
+                            <td class="p-3 border text-center admin-action-col ${state.currentUser ? '' : 'hidden'}">
+                                <button onclick="deleteItem('chandaCollections', ${idx})" class="text-red-500 hover:text-red-700 px-2 py-1"><i class="fa-solid fa-trash"></i></button>
+                            </td>
                         </tr>`;
                 });
             }
@@ -407,309 +531,315 @@
             // Render Committee Table
             let commHtml = "";
             if (state.committee.length === 0) {
-                commHtml = `<tr><td colspan="${state.isAdmin ? 6 : 5}" class="p-3 text-center text-slate-400">কোনো তথ্য পাওয়া যায়নি</td></tr>`;
+                commHtml = `<tr><td colspan="6" class="p-3 text-center text-slate-400">কোনো তথ্য পাওয়া যায়নি</td></tr>`;
             } else {
-                state.committee.forEach((c, idx) => {
-                    const photoHtml = c.photo 
-                        ? `<img src="${c.photo}" alt="${c.name}" class="w-10 h-10 rounded-full object-cover border border-slate-300 shadow-sm mx-auto">`
-                        : `<div class="w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-sm mx-auto"><i class="fa-solid fa-user"></i></div>`;
-
+                state.committee.forEach((item, idx) => {
+                    const photoSrc = item.photo ? item.photo : 'https://via.placeholder.com/40';
                     commHtml += `
                         <tr class="hover:bg-slate-50 transition">
-                            <td class="p-2 border text-center w-14">${photoHtml}</td>
-                            <td class="p-3 border font-semibold text-slate-800">${c.designation}</td>
-                            <td class="p-3 border">${c.name}</td>
-                            <td class="p-3 border">${c.mobile || '-'}</td>
-                            <td class="p-3 border font-mono text-slate-600">${c.nid || '-'}</td>
-                            ${state.isAdmin ? `
-                            <td class="p-3 border text-center space-x-1">
-                                <button onclick="openEditModal('committee', ${idx})" class="bg-blue-100 hover:bg-blue-200 text-blue-700 text-xs px-2.5 py-1 rounded font-semibold"><i class="fa-solid fa-pen-to-square"></i> এডিট</button>
-                                <button onclick="deleteItem('committee', ${idx})" class="bg-red-100 hover:bg-red-200 text-red-600 text-xs px-2 py-1 rounded font-semibold"><i class="fa-solid fa-trash"></i></button>
-                            </td>` : ''}
+                            <td class="p-2 border text-center">
+                                <img src="${photoSrc}" class="w-10 h-10 object-cover rounded-full mx-auto border">
+                            </td>
+                            <td class="p-3 border font-semibold text-indigo-900">${item.designation}</td>
+                            <td class="p-3 border font-bold text-slate-800">${item.name}</td>
+                            <td class="p-3 border">${item.mobile}</td>
+                            <td class="p-3 border text-xs text-slate-600">${item.nid}</td>
+                            <td class="p-3 border text-center admin-action-col ${state.currentUser ? '' : 'hidden'}">
+                                <button onclick="deleteItem('committee', ${idx})" class="text-red-500 hover:text-red-700 px-2 py-1"><i class="fa-solid fa-trash"></i></button>
+                            </td>
                         </tr>`;
                 });
             }
             document.getElementById('committeeTableBody').innerHTML = commHtml;
 
-            // Render Member Table
+            // Render Members Table
             let memHtml = "";
             if (state.members.length === 0) {
-                memHtml = `<tr><td colspan="${state.isAdmin ? 5 : 4}" class="p-3 text-center text-slate-400">কোনো সদস্য নিবন্ধিত নেই</td></tr>`;
+                memHtml = `<tr><td colspan="5" class="p-3 text-center text-slate-400">কোনো তথ্য পাওয়া যায়নি</td></tr>`;
             } else {
-                state.members.forEach((m, idx) => {
+                state.members.forEach((item, idx) => {
                     memHtml += `
                         <tr class="hover:bg-slate-50 transition">
                             <td class="p-3 border text-center font-medium w-12">${(idx + 1).toLocaleString('bn-BD')}</td>
-                            <td class="p-3 border font-semibold text-slate-800">${m.name}</td>
-                            <td class="p-3 border">${m.mobile || '-'}</td>
-                            <td class="p-3 border font-mono text-slate-600">${m.nid || '-'}</td>
-                            ${state.isAdmin ? `
-                            <td class="p-3 border text-center space-x-1">
-                                <button onclick="openEditModal('member', ${idx})" class="bg-blue-100 hover:bg-blue-200 text-blue-700 text-xs px-2.5 py-1 rounded font-semibold"><i class="fa-solid fa-pen-to-square"></i> এডিট</button>
-                                <button onclick="deleteItem('member', ${idx})" class="bg-red-100 hover:bg-red-200 text-red-600 text-xs px-2 py-1 rounded font-semibold"><i class="fa-solid fa-trash"></i></button>
-                            </td>` : ''}
+                            <td class="p-3 border font-semibold text-slate-800">${item.name}</td>
+                            <td class="p-3 border">${item.mobile}</td>
+                            <td class="p-3 border text-xs text-slate-600">${item.nid}</td>
+                            <td class="p-3 border text-center admin-action-col ${state.currentUser ? '' : 'hidden'}">
+                                <button onclick="deleteItem('members', ${idx})" class="text-red-500 hover:text-red-700 px-2 py-1"><i class="fa-solid fa-trash"></i></button>
+                            </td>
                         </tr>`;
                 });
             }
             document.getElementById('memberTableBody').innerHTML = memHtml;
+
+            // Render Admins List
+            let adminHtml = "";
+            state.admins.forEach((item, idx) => {
+                adminHtml += `
+                    <tr class="hover:bg-slate-50 transition">
+                        <td class="p-3 border font-semibold">${item.name}</td>
+                        <td class="p-3 border text-slate-600">${item.username}</td>
+                        <td class="p-3 border">${item.mobile}</td>
+                        <td class="p-3 border"><span class="bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded font-bold">${item.role === 'superadmin' ? 'প্রধান অ্যাডমিন' : 'সহকারী অ্যাডমিন'}</span></td>
+                        <td class="p-3 border text-center">
+                            ${state.currentUser && state.currentUser.role === 'superadmin' && item.username !== state.currentUser.username ? 
+                            `<button onclick="deleteItem('admins', ${idx})" class="text-red-500 hover:text-red-700 px-2 py-1"><i class="fa-solid fa-trash"></i></button>` : '<span class="text-xs text-slate-400">সুরক্ষিত</span>'}
+                        </td>
+                    </tr>`;
+            });
+            document.getElementById('adminListTableBody').innerHTML = adminHtml;
         }
 
-        // Edit Modal Operations
-        function openEditModal(type, index) {
-            document.getElementById('editType').value = type;
-            document.getElementById('editIndex').value = index;
-            const fieldsContainer = document.getElementById('modalFields');
-            fieldsContainer.innerHTML = '';
-
-            if (type === 'committee') {
-                const item = state.committee[index];
-                document.getElementById('modalTitle').innerText = "কমিটি পদবি ও তথ্য এডিট";
-                fieldsContainer.innerHTML = `
-                    <div>
-                        <label class="block text-xs font-semibold mb-1">পদবি (Designation):</label>
-                        <input type="text" id="modalDesignation" value="${item.designation}" class="w-full p-2 border rounded text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold mb-1">সদস্যের নাম:</label>
-                        <input type="text" id="modalName" value="${item.name}" class="w-full p-2 border rounded text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold mb-1">মোবাইল নম্বর:</label>
-                        <input type="text" id="modalMobile" value="${item.mobile || ''}" class="w-full p-2 border rounded text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold mb-1">এনআইডি / জন্ম নিবন্ধন নম্বর:</label>
-                        <input type="text" id="modalNid" value="${item.nid || ''}" class="w-full p-2 border rounded text-sm">
-                    </div>
-                `;
-            } else if (type === 'member') {
-                const item = state.members[index];
-                document.getElementById('modalTitle').innerText = "সাধারণ সদস্য তথ্য এডিট";
-                fieldsContainer.innerHTML = `
-                    <div>
-                        <label class="block text-xs font-semibold mb-1">সদস্যের নাম:</label>
-                        <input type="text" id="modalName" value="${item.name}" class="w-full p-2 border rounded text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold mb-1">মোবাইল নম্বর:</label>
-                        <input type="text" id="modalMobile" value="${item.mobile || ''}" class="w-full p-2 border rounded text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold mb-1">এনআইডি / জন্ম নিবন্ধন নম্বর:</label>
-                        <input type="text" id="modalNid" value="${item.nid || ''}" class="w-full p-2 border rounded text-sm">
-                    </div>
-                `;
-            }
-
-            document.getElementById('editModal').classList.remove('hidden');
-            document.getElementById('editModal').classList.add('flex');
-        }
-
-        function closeEditModal() {
-            document.getElementById('editModal').classList.add('hidden');
-            document.getElementById('editModal').classList.remove('flex');
-        }
-
-        function saveEditedData() {
-            const type = document.getElementById('editType').value;
-            const index = document.getElementById('editIndex').value;
-
-            const name = document.getElementById('modalName').value.trim();
-            const mobile = document.getElementById('modalMobile').value.trim();
-            const nid = document.getElementById('modalNid').value.trim();
-
-            if (!name) {
-                alert("সদস্যের নাম খালি রাখা যাবে না!");
-                return;
-            }
-
-            if (type === 'committee') {
-                const designation = document.getElementById('modalDesignation').value.trim();
-                state.committee[index] = {
-                    ...state.committee[index],
-                    designation: designation || state.committee[index].designation,
-                    name,
-                    mobile,
-                    nid
-                };
-            } else if (type === 'member') {
-                state.members[index] = {
-                    ...state.members[index],
-                    name,
-                    mobile,
-                    nid
-                };
-            }
-
-            saveState();
-            closeEditModal();
-            alert("তথ্য সফলভাবে আপডেট করা হয়েছে!");
-        }
-
-        function deleteItem(type, index) {
-            if (confirm("আপনি কি নিশ্চিত যে এই তথ্যটি মুছে ফেলতে চান?")) {
-                if (type === 'committee') {
-                    state.committee.splice(index, 1);
-                } else if (type === 'member') {
-                    state.members.splice(index, 1);
-                }
-                saveState();
-            }
-        }
-
-        // Toggle Admin State
-        function toggleAdminView() {
-            if(!state.isAdmin) {
-                let pass = prompt("অ্যাডমিন সিকিউরিটি পিন দিন (ডিফল্ট: 1234):");
-                if(pass === "1234") {
-                    state.isAdmin = true;
-                } else if (pass !== null) {
-                    alert("ভুল পিন নম্বর!");
-                }
-            } else {
-                state.isAdmin = false;
-            }
-            render();
-        }
-
-        // Tab Navigation
+        // Tab Switcher Function
         function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
             document.getElementById(tabId).classList.remove('hidden');
 
             const titles = {
-                'dashboardTab': 'ড্যাশবোর্ড ওভারভিউ',
-                'chandaTab': 'মাসিক চাঁদা সংগ্রহ ও রেজিস্টার',
-                'committeeTab': 'পরিচালনা কমিটি ও পদবি খতিয়ান',
-                'membersTab': 'সাধারণ সদস্য তালিকা',
-                'samitySettingsTab': 'সমিতি ও লোগো সেটিং',
-                'backupTab': 'ডাটা ব্যাকআপ ও রিসেট'
+                dashboardTab: "ড্যাশবোর্ড ওভারভিউ",
+                chandaTab: "মাসিক চাঁদা রেজিস্টার",
+                committeeTab: "পরিচালনা কমিটি ও পদবি",
+                membersTab: "সাধারণ সদস্য তালিকা",
+                adminManageTab: "অ্যাডমিন ম্যানেজমেন্ট",
+                samitySettingsTab: "সমিতি ও লোগো সেটিং",
+                backupTab: "ডাটা ব্যাকআপ ও রিসেট"
             };
-            document.getElementById('sectionTitle').innerText = titles[tabId] || 'ড্যাশবোর্ড';
+            document.getElementById('sectionTitle').innerText = titles[tabId] || "ড্যাশবোর্ড";
         }
 
-        // Add Chanda Entry
+        // Chanda Logic
         function addChandaEntry() {
             const memberName = document.getElementById('chandaMemberSelect').value;
             const month = document.getElementById('chandaMonth').value;
-            const year = document.getElementById('chandaYear').value.trim();
-            const amount = document.getElementById('chandaAmount').value.trim();
-            const date = new Date().toISOString().slice(0, 10);
+            const year = document.getElementById('chandaYear').value;
+            const amount = document.getElementById('chandaAmount').value;
 
-            if (memberName && month && year && amount) {
-                state.chandaCollections.unshift({
-                    memberName,
-                    month,
-                    year,
-                    amount: Number(amount),
-                    date
-                });
-
-                document.getElementById('chandaAmount').value = '';
-                saveState();
-                alert("মাসিক চাঁদা সফলভাবে জমা হয়েছে!");
-            } else {
-                alert("অনুগ্রহ করে সদস্য, মাস, বছর এবং চাঁদার পরিমাণ সঠিকভাবে দিন।");
+            if(!memberName || !amount) {
+                alert("অনুগ্রহ করে সদস্য এবং টাকার পরিমাণ সঠিক নির্বাচন করুন!");
+                return;
             }
+
+            const today = new Date().toISOString().split('T')[0];
+            state.chandaCollections.push({ memberName, month, year, amount, date: today });
+            document.getElementById('chandaAmount').value = '';
+            saveState();
         }
 
-        // Add Committee Member
+        // Committee Logic with File Reader
         function addCommitteeMember() {
-            const designation = document.getElementById('commDesignation').value.trim();
-            const name = document.getElementById('commName').value.trim();
-            const mobile = document.getElementById('commMobile').value.trim();
-            const nid = document.getElementById('commNid').value.trim();
+            const designation = document.getElementById('commDesignation').value;
+            const name = document.getElementById('commName').value;
+            const mobile = document.getElementById('commMobile').value;
+            const nid = document.getElementById('commNid').value;
             const fileInput = document.getElementById('commPhotoFile');
 
-            if (designation && name) {
-                const processAndSave = (photoBase64) => {
-                    state.committee.push({ designation, name, mobile, nid, photo: photoBase64 });
-                    
-                    document.getElementById('commDesignation').value = '';
-                    document.getElementById('commName').value = '';
-                    document.getElementById('commMobile').value = '';
-                    document.getElementById('commNid').value = '';
-                    fileInput.value = '';
+            if(!designation || !name) {
+                alert("পদবি ও নাম অবশ্যই প্রদান করতে হবে!");
+                return;
+            }
 
+            if(fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    state.committee.push({ designation, name, mobile, nid, photo: e.target.result });
+                    clearCommitteeForm();
                     saveState();
                 };
-
-                if (fileInput.files && fileInput.files[0]) {
-                    const reader = new FileReader();
-                    reader.onload = function (e) {
-                        processAndSave(e.target.result);
-                    };
-                    reader.readAsDataURL(fileInput.files[0]);
-                } else {
-                    processAndSave("");
-                }
+                reader.readAsDataURL(fileInput.files[0]);
             } else {
-                alert("অনুগ্রহ করে পদবি এবং নাম পূরণ করুন।");
-            }
-        }
-
-        // Add Member
-        function addGeneralMember() {
-            const name = document.getElementById('memName').value.trim();
-            const mobile = document.getElementById('memMobile').value.trim();
-            const nid = document.getElementById('memNid').value.trim();
-
-            if (name) {
-                state.members.push({ name, mobile, nid });
-
-                document.getElementById('memName').value = '';
-                document.getElementById('memMobile').value = '';
-                document.getElementById('memNid').value = '';
-
+                state.committee.push({ designation, name, mobile, nid, photo: "" });
+                clearCommitteeForm();
                 saveState();
-            } else {
-                alert("অনুগ্রহ করে সদস্যের নাম পূরণ করুন।");
             }
         }
 
-        // Save Settings
-        function saveSamitySettings() {
-            const newName = document.getElementById('settingSamityName').value.trim();
-            const logoFileInput = document.getElementById('settingLogoFile');
+        function clearCommitteeForm() {
+            document.getElementById('commDesignation').value = '';
+            document.getElementById('commName').value = '';
+            document.getElementById('commMobile').value = '';
+            document.getElementById('commNid').value = '';
+            document.getElementById('commPhotoFile').value = '';
+        }
 
-            if (newName) {
-                state.samityName = newName;
+        // General Member Logic
+        function addGeneralMember() {
+            const name = document.getElementById('memName').value;
+            const mobile = document.getElementById('memMobile').value;
+            const nid = document.getElementById('memNid').value;
 
-                if (logoFileInput.files && logoFileInput.files[0]) {
-                    const reader = new FileReader();
-                    reader.onload = function (e) {
-                        state.logoUrl = e.target.result;
-                        saveState();
-                        alert("সেটিং সংরক্ষিত হয়েছে!");
-                    };
-                    reader.readAsDataURL(logoFileInput.files[0]);
-                } else {
-                    saveState();
-                    alert("সেটিং সংরক্ষিত হয়েছে!");
-                }
-            } else {
-                alert("সমিতির নাম খালি রাখা যাবে না।");
+            if(!name) {
+                alert("সদস্যের নাম লিখুন!");
+                return;
             }
+
+            state.members.push({ name, mobile, nid });
+            document.getElementById('memName').value = '';
+            document.getElementById('memMobile').value = '';
+            document.getElementById('memNid').value = '';
+            saveState();
+        }
+
+        // Admin Management Logic
+        function addAdminUser() {
+            const name = document.getElementById('newAdminName').value;
+            const username = document.getElementById('newAdminUsername').value;
+            const mobile = document.getElementById('newAdminMobile').value;
+            const password = document.getElementById('newAdminPassword').value;
+            const pin = document.getElementById('newAdminSecurityPin').value;
+            const role = document.getElementById('newAdminRole').value;
+
+            if(!name || !username || !password || !pin) {
+                alert("সকল প্রয়োজনীয় ঘর সঠিকভাবে পূরণ করুন!");
+                return;
+            }
+
+            if(state.admins.find(a => a.username === username)) {
+                alert("এই ইউজারনেমটি পূর্বে ব্যবহৃত হয়েছে!");
+                return;
+            }
+
+            state.admins.push({ username, password, name, mobile, pin, role });
+            document.getElementById('newAdminName').value = '';
+            document.getElementById('newAdminUsername').value = '';
+            document.getElementById('newAdminMobile').value = '';
+            document.getElementById('newAdminPassword').value = '';
+            document.getElementById('newAdminSecurityPin').value = '';
+            saveState();
+        }
+
+        // Delete Logic
+        function deleteItem(collectionName, index) {
+            if(confirm("আপনি কি নিশ্চিতভাবে এই তথ্যটি মুছে ফেলতে চান?")) {
+                state[collectionName].splice(index, 1);
+                saveState();
+            }
+        }
+
+        // Settings Logic
+        function saveSamitySettings() {
+            const name = document.getElementById('settingSamityName').value;
+            const logoInput = document.getElementById('settingLogoFile');
+
+            if(name) state.samityName = name;
+
+            if(logoInput.files && logoInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    state.logoUrl = e.target.result;
+                    saveState();
+                    alert("সেটিংস সফলভাবে সংরক্ষিত হয়েছে!");
+                };
+                reader.readAsDataURL(logoInput.files[0]);
+            } else {
+                saveState();
+                alert("সেটিংস সফলভাবে সংরক্ষিত হয়েছে!");
+            }
+        }
+
+        // Login & Auth Handler
+        function toggleAdminView() {
+            if(state.currentUser) {
+                state.currentUser = null;
+                render();
+            } else {
+                document.getElementById('loginModal').classList.remove('hidden');
+                document.getElementById('loginModal').classList.add('flex');
+            }
+        }
+
+        function closeLoginModal() {
+            document.getElementById('loginModal').classList.add('hidden');
+            document.getElementById('loginModal').classList.remove('flex');
+        }
+
+        function performAdminLogin() {
+            const u = document.getElementById('loginUsername').value;
+            const p = document.getElementById('loginPassword').value;
+
+            const found = state.admins.find(a => a.username === u && a.password === p);
+            if(found) {
+                state.currentUser = found;
+                closeLoginModal();
+                render();
+                document.getElementById('loginUsername').value = '';
+                document.getElementById('loginPassword').value = '';
+            } else {
+                alert("ভুল ইউজারনেম অথবা পাসওয়ার্ড!");
+            }
+        }
+
+        // Forgot Password Recovery Handler
+        function openForgotPasswordModal() {
+            closeLoginModal();
+            document.getElementById('forgotModal').classList.remove('hidden');
+            document.getElementById('forgotModal').classList.add('flex');
+        }
+
+        function closeForgotModal() {
+            document.getElementById('forgotModal').classList.add('hidden');
+            document.getElementById('forgotModal').classList.remove('flex');
+        }
+
+        function resetPasswordProcess() {
+            const u = document.getElementById('forgotUsername').value;
+            const pin = document.getElementById('forgotPin').value;
+            const newPass = document.getElementById('forgotNewPass').value;
+
+            const adminObj = state.admins.find(a => a.username === u && a.pin === pin);
+            if(adminObj) {
+                adminObj.password = newPass;
+                saveState();
+                alert("পাসওয়ার্ড সফলভাবে পরিবর্তন করা হয়েছে! নতুন পাসওয়ার্ড দিয়ে লগইন করুন।");
+                closeForgotModal();
+                toggleAdminView();
+            } else {
+                alert("ইউজারনেম অথবা সিকিউরিটি পিন মেলেনি!");
+            }
+        }
+
+        // User Registration Handler
+        function openRegisterModal() {
+            document.getElementById('registerModal').classList.remove('hidden');
+            document.getElementById('registerModal').classList.add('flex');
+        }
+
+        function closeRegisterModal() {
+            document.getElementById('registerModal').classList.add('hidden');
+            document.getElementById('registerModal').classList.remove('flex');
+        }
+
+        function submitUserRegistration() {
+            const name = document.getElementById('regName').value;
+            const gmail = document.getElementById('regGmail').value;
+
+            if(!name || !gmail) {
+                alert("আপনার নাম ও জিমেইল অ্যাড্রেস সঠিকভাবে প্রদান করুন!");
+                return;
+            }
+
+            state.members.push({ name, mobile: "N/A", nid: gmail });
+            alert("আপনার আবেদন সফলভাবে জমা হয়েছে। অ্যাডমিন রিভিউ করে অন্তর্ভুক্ত করবে।");
+            document.getElementById('regName').value = '';
+            document.getElementById('regGmail').value = '';
+            closeRegisterModal();
+            saveState();
         }
 
         // Export Data
         function exportData() {
-            const exportState = { ...state, isAdmin: false };
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportState, null, 2));
-            const downloadAnchor = document.createElement('a');
-            downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", `samity_backup_${new Date().toISOString().slice(0,10)}.json`);
-            document.body.appendChild(downloadAnchor);
-            downloadAnchor.click();
-            downloadAnchor.remove();
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state));
+            const dlAnchorElem = document.createElement('a');
+            dlAnchorElem.setAttribute("href", dataStr);
+            dlAnchorElem.setAttribute("download", `samity_backup_${new Date().toISOString().split('T')[0]}.json`);
+            dlAnchorElem.click();
         }
 
-        // Export PDF
+        // Download PDF Function
         function downloadPDF() {
             const element = document.getElementById('pdfContent');
             const opt = {
-                margin:       0.5,
-                filename:     `${state.samityName}_রিপোর্ট.pdf`,
+                margin:       0.2,
+                filename:     `Samity_Ledger_${new Date().toISOString().split('T')[0]}.pdf`,
                 image:        { type: 'jpeg', quality: 0.98 },
                 html2canvas:  { scale: 2 },
                 jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
@@ -717,6 +847,7 @@
             html2pdf().set(opt).from(element).save();
         }
 
+        // Self Initialization
         window.onload = init;
     </script>
 </body>
