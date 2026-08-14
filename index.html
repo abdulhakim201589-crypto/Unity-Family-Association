@@ -518,12 +518,13 @@
                             <td class="p-3 border text-center font-medium w-12">${(idx + 1).toLocaleString('bn-BD')}</td>
                             <td class="p-3 border font-semibold text-slate-800">${item.memberName}</td>
                             <td class="p-3 border">${item.month} ${item.year}</td>
-                            <td class="p-3 border font-bold text-emerald-700">৳ ${Number(item.amount).toLocaleString('bn-BD')}</td>
-                            <td class="p-3 border text-xs text-slate-500">${item.date}</td>
+                            <td class="p-3 border font-bold text-emerald-600">৳ ${Number(item.amount).toLocaleString('bn-BD')}</td>
+                            <td class="p-3 border text-slate-500">${item.date}</td>
                             <td class="p-3 border text-center admin-action-col ${state.currentUser ? '' : 'hidden'}">
-                                <button onclick="deleteItem('chandaCollections', ${idx})" class="text-red-500 hover:text-red-700 px-2 py-1"><i class="fa-solid fa-trash"></i></button>
+                                <button onclick="deleteChanda(${idx})" class="text-red-500 hover:text-red-700 px-2 py-1"><i class="fa-solid fa-trash"></i></button>
                             </td>
-                        </tr>`;
+                        </tr>
+                    `;
                 });
             }
             document.getElementById('chandaTableBody').innerHTML = chandaHtml;
@@ -531,83 +532,85 @@
             // Render Committee Table
             let commHtml = "";
             if (state.committee.length === 0) {
-                commHtml = `<tr><td colspan="6" class="p-3 text-center text-slate-400">কোনো তথ্য পাওয়া যায়নি</td></tr>`;
+                commHtml = `<tr><td colspan="6" class="p-3 text-center text-slate-400">কোনো পরিচালনা সদস্যের তথ্য নেই</td></tr>`;
             } else {
-                state.committee.forEach((item, idx) => {
-                    const photoSrc = item.photo ? item.photo : 'https://via.placeholder.com/40';
+                state.committee.forEach((c, idx) => {
                     commHtml += `
                         <tr class="hover:bg-slate-50 transition">
-                            <td class="p-2 border text-center">
-                                <img src="${photoSrc}" class="w-10 h-10 object-cover rounded-full mx-auto border">
+                            <td class="p-2 border text-center w-16">
+                                ${c.photo ? `<img src="${c.photo}" class="w-10 h-10 object-cover rounded-full mx-auto">` : `<i class="fa-solid fa-user-circle text-2xl text-slate-400"></i>`}
                             </td>
-                            <td class="p-3 border font-semibold text-indigo-900">${item.designation}</td>
-                            <td class="p-3 border font-bold text-slate-800">${item.name}</td>
-                            <td class="p-3 border">${item.mobile}</td>
-                            <td class="p-3 border text-xs text-slate-600">${item.nid}</td>
+                            <td class="p-3 border font-bold text-indigo-900">${c.designation}</td>
+                            <td class="p-3 border font-medium">${c.name}</td>
+                            <td class="p-3 border text-slate-600">${c.mobile || '-'}</td>
+                            <td class="p-3 border text-slate-600">${c.nid || '-'}</td>
                             <td class="p-3 border text-center admin-action-col ${state.currentUser ? '' : 'hidden'}">
-                                <button onclick="deleteItem('committee', ${idx})" class="text-red-500 hover:text-red-700 px-2 py-1"><i class="fa-solid fa-trash"></i></button>
+                                <button onclick="deleteCommittee(${idx})" class="text-red-500 hover:text-red-700 px-2 py-1"><i class="fa-solid fa-trash"></i></button>
                             </td>
-                        </tr>`;
+                        </tr>
+                    `;
                 });
             }
             document.getElementById('committeeTableBody').innerHTML = commHtml;
 
-            // Render Members Table
+            // Render General Members Table
             let memHtml = "";
             if (state.members.length === 0) {
-                memHtml = `<tr><td colspan="5" class="p-3 text-center text-slate-400">কোনো তথ্য পাওয়া যায়নি</td></tr>`;
+                memHtml = `<tr><td colspan="5" class="p-3 text-center text-slate-400">কোনো সদস্য নিবন্ধিত নেই</td></tr>`;
             } else {
-                state.members.forEach((item, idx) => {
+                state.members.forEach((m, idx) => {
                     memHtml += `
                         <tr class="hover:bg-slate-50 transition">
                             <td class="p-3 border text-center font-medium w-12">${(idx + 1).toLocaleString('bn-BD')}</td>
-                            <td class="p-3 border font-semibold text-slate-800">${item.name}</td>
-                            <td class="p-3 border">${item.mobile}</td>
-                            <td class="p-3 border text-xs text-slate-600">${item.nid}</td>
+                            <td class="p-3 border font-medium">${m.name}</td>
+                            <td class="p-3 border text-slate-600">${m.mobile || '-'}</td>
+                            <td class="p-3 border text-slate-600">${m.nid || '-'}</td>
                             <td class="p-3 border text-center admin-action-col ${state.currentUser ? '' : 'hidden'}">
-                                <button onclick="deleteItem('members', ${idx})" class="text-red-500 hover:text-red-700 px-2 py-1"><i class="fa-solid fa-trash"></i></button>
+                                <button onclick="deleteMember(${idx})" class="text-red-500 hover:text-red-700 px-2 py-1"><i class="fa-solid fa-trash"></i></button>
                             </td>
-                        </tr>`;
+                        </tr>
+                    `;
                 });
             }
             document.getElementById('memberTableBody').innerHTML = memHtml;
 
-            // Render Admins List
+            // Render Admin List Table
             let adminHtml = "";
-            state.admins.forEach((item, idx) => {
+            state.admins.forEach((a, idx) => {
                 adminHtml += `
                     <tr class="hover:bg-slate-50 transition">
-                        <td class="p-3 border font-semibold">${item.name}</td>
-                        <td class="p-3 border text-slate-600">${item.username}</td>
-                        <td class="p-3 border">${item.mobile}</td>
-                        <td class="p-3 border"><span class="bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded font-bold">${item.role === 'superadmin' ? 'প্রধান অ্যাডমিন' : 'সহকারী অ্যাডমিন'}</span></td>
+                        <td class="p-3 border font-medium">${a.name}</td>
+                        <td class="p-3 border text-indigo-600">${a.username}</td>
+                        <td class="p-3 border">${a.mobile}</td>
+                        <td class="p-3 border"><span class="bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded font-bold">${a.role === 'superadmin' ? 'প্রধান' : 'সহকারী'}</span></td>
                         <td class="p-3 border text-center">
-                            ${state.currentUser && state.currentUser.role === 'superadmin' && item.username !== state.currentUser.username ? 
-                            `<button onclick="deleteItem('admins', ${idx})" class="text-red-500 hover:text-red-700 px-2 py-1"><i class="fa-solid fa-trash"></i></button>` : '<span class="text-xs text-slate-400">সুরক্ষিত</span>'}
+                            ${state.currentUser && state.currentUser.role === 'superadmin' && a.username !== 'admin' ? 
+                            `<button onclick="deleteAdmin(${idx})" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>` : '-'}
                         </td>
-                    </tr>`;
+                    </tr>
+                `;
             });
             document.getElementById('adminListTableBody').innerHTML = adminHtml;
         }
 
-        // Tab Switcher Function
+        // Navigation Tabs Toggle
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
             document.getElementById(tabId).classList.remove('hidden');
 
             const titles = {
-                dashboardTab: "ড্যাশবোর্ড ওভারভিউ",
-                chandaTab: "মাসিক চাঁদা রেজিস্টার",
-                committeeTab: "পরিচালনা কমিটি ও পদবি",
-                membersTab: "সাধারণ সদস্য তালিকা",
-                adminManageTab: "অ্যাডমিন ম্যানেজমেন্ট",
-                samitySettingsTab: "সমিতি ও লোগো সেটিং",
-                backupTab: "ডাটা ব্যাকআপ ও রিসেট"
+                'dashboardTab': 'ড্যাশবোর্ড ওভারভিউ',
+                'chandaTab': 'মাসিক চাঁদা রেজিস্টার',
+                'committeeTab': 'পরিচালনা কমিটি ও পদবি',
+                'membersTab': 'সাধারণ সদস্য তালিকা',
+                'adminManageTab': 'অ্যাডমিন ম্যানেজমেন্ট',
+                'samitySettingsTab': 'সমিতি ও লোগো সেটিং',
+                'backupTab': 'ডাটা ব্যাকআপ ও রিসেট'
             };
-            document.getElementById('sectionTitle').innerText = titles[tabId] || "ড্যাশবোর্ড";
+            document.getElementById('sectionTitle').innerText = titles[tabId] || 'ড্যাশবোর্ড';
         }
 
-        // Chanda Logic
+        // Action Handlers (Add/Delete/Data Mutations)
         function addChandaEntry() {
             const memberName = document.getElementById('chandaMemberSelect').value;
             const month = document.getElementById('chandaMonth').value;
@@ -615,17 +618,23 @@
             const amount = document.getElementById('chandaAmount').value;
 
             if(!memberName || !amount) {
-                alert("অনুগ্রহ করে সদস্য এবং টাকার পরিমাণ সঠিক নির্বাচন করুন!");
+                alert("দয়া করে সদস্যের নাম এবং টাকার পরিমাণ সঠিক দিন।");
                 return;
             }
 
             const today = new Date().toISOString().split('T')[0];
-            state.chandaCollections.push({ memberName, month, year, amount, date: today });
+            state.chandaCollections.push({ memberName, month, year, amount: Number(amount), date: today });
             document.getElementById('chandaAmount').value = '';
             saveState();
         }
 
-        // Committee Logic with File Reader
+        function deleteChanda(index) {
+            if(confirm("আপনি কি নিশ্চিত যে এই চাঁদার এন্ট্রিটি মুছে ফেলতে চান?")) {
+                state.chandaCollections.splice(index, 1);
+                saveState();
+            }
+        }
+
         function addCommitteeMember() {
             const designation = document.getElementById('commDesignation').value;
             const name = document.getElementById('commName').value;
@@ -634,41 +643,43 @@
             const fileInput = document.getElementById('commPhotoFile');
 
             if(!designation || !name) {
-                alert("পদবি ও নাম অবশ্যই প্রদান করতে হবে!");
+                alert("পদবি এবং নাম দেওয়া আবশ্যক।");
                 return;
             }
 
-            if(fileInput.files && fileInput.files[0]) {
+            const processSave = (photoData = "") => {
+                state.committee.push({ designation, name, mobile, nid, photo: photoData });
+                document.getElementById('commDesignation').value = '';
+                document.getElementById('commName').value = '';
+                document.getElementById('commMobile').value = '';
+                document.getElementById('commNid').value = '';
+                document.getElementById('commPhotoFile').value = '';
+                saveState();
+            };
+
+            if (fileInput.files && fileInput.files[0]) {
                 const reader = new FileReader();
-                reader.onload = function(e) {
-                    state.committee.push({ designation, name, mobile, nid, photo: e.target.result });
-                    clearCommitteeForm();
-                    saveState();
-                };
+                reader.onload = function(e) { processSave(e.target.result); };
                 reader.readAsDataURL(fileInput.files[0]);
             } else {
-                state.committee.push({ designation, name, mobile, nid, photo: "" });
-                clearCommitteeForm();
+                processSave();
+            }
+        }
+
+        function deleteCommittee(index) {
+            if(confirm("কমিটির এই সদস্যকে মুছে ফেলতে চান?")) {
+                state.committee.splice(index, 1);
                 saveState();
             }
         }
 
-        function clearCommitteeForm() {
-            document.getElementById('commDesignation').value = '';
-            document.getElementById('commName').value = '';
-            document.getElementById('commMobile').value = '';
-            document.getElementById('commNid').value = '';
-            document.getElementById('commPhotoFile').value = '';
-        }
-
-        // General Member Logic
         function addGeneralMember() {
             const name = document.getElementById('memName').value;
             const mobile = document.getElementById('memMobile').value;
             const nid = document.getElementById('memNid').value;
 
             if(!name) {
-                alert("সদস্যের নাম লিখুন!");
+                alert("সদস্যের নাম দিন।");
                 return;
             }
 
@@ -679,7 +690,13 @@
             saveState();
         }
 
-        // Admin Management Logic
+        function deleteMember(index) {
+            if(confirm("এই সদস্যকে মুছে ফেলতে চান?")) {
+                state.members.splice(index, 1);
+                saveState();
+            }
+        }
+
         function addAdminUser() {
             const name = document.getElementById('newAdminName').value;
             const username = document.getElementById('newAdminUsername').value;
@@ -689,57 +706,52 @@
             const role = document.getElementById('newAdminRole').value;
 
             if(!name || !username || !password || !pin) {
-                alert("সকল প্রয়োজনীয় ঘর সঠিকভাবে পূরণ করুন!");
+                alert("দয়া করে সকল ঘর সঠিকভাবে পূরণ করুন।");
                 return;
             }
 
-            if(state.admins.find(a => a.username === username)) {
-                alert("এই ইউজারনেমটি পূর্বে ব্যবহৃত হয়েছে!");
+            if(state.admins.some(a => a.username === username)) {
+                alert("এই ইউজারনেমটি ইতিমধ্যেই ব্যবহৃত হয়েছে।");
                 return;
             }
 
-            state.admins.push({ username, password, name, mobile, pin, role });
-            document.getElementById('newAdminName').value = '';
-            document.getElementById('newAdminUsername').value = '';
-            document.getElementById('newAdminMobile').value = '';
-            document.getElementById('newAdminPassword').value = '';
-            document.getElementById('newAdminSecurityPin').value = '';
+            state.admins.push({ name, username, mobile, password, pin, role });
+            alert("নতুন অ্যাডমিন সফলভাবে যোগ করা হয়েছে।");
             saveState();
         }
 
-        // Delete Logic
-        function deleteItem(collectionName, index) {
-            if(confirm("আপনি কি নিশ্চিতভাবে এই তথ্যটি মুছে ফেলতে চান?")) {
-                state[collectionName].splice(index, 1);
+        function deleteAdmin(index) {
+            if(confirm("আপনি কি নিশ্চিত যে এই অ্যাডমিন অ্যাকাউন্টটি বাতিল করতে চান?")) {
+                state.admins.splice(index, 1);
                 saveState();
             }
         }
 
-        // Settings Logic
         function saveSamitySettings() {
             const name = document.getElementById('settingSamityName').value;
-            const logoInput = document.getElementById('settingLogoFile');
+            const fileInput = document.getElementById('settingLogoFile');
 
             if(name) state.samityName = name;
 
-            if(logoInput.files && logoInput.files[0]) {
+            if (fileInput.files && fileInput.files[0]) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     state.logoUrl = e.target.result;
                     saveState();
-                    alert("সেটিংস সফলভাবে সংরক্ষিত হয়েছে!");
+                    alert("সমিতির সেটিং আপডেট হয়েছে।");
                 };
-                reader.readAsDataURL(logoInput.files[0]);
+                reader.readAsDataURL(fileInput.files[0]);
             } else {
                 saveState();
-                alert("সেটিংস সফলভাবে সংরক্ষিত হয়েছে!");
+                alert("সমিতির সেটিং আপডেট হয়েছে।");
             }
         }
 
-        // Login & Auth Handler
+        // Authentication & Modals
         function toggleAdminView() {
             if(state.currentUser) {
                 state.currentUser = null;
+                switchTab('dashboardTab');
                 render();
             } else {
                 document.getElementById('loginModal').classList.remove('hidden');
@@ -761,14 +773,11 @@
                 state.currentUser = found;
                 closeLoginModal();
                 render();
-                document.getElementById('loginUsername').value = '';
-                document.getElementById('loginPassword').value = '';
             } else {
-                alert("ভুল ইউজারনেম অথবা পাসওয়ার্ড!");
+                alert("ইউজারনেম বা পাসওয়ার্ড সঠিক নয়!");
             }
         }
 
-        // Forgot Password Recovery Handler
         function openForgotPasswordModal() {
             closeLoginModal();
             document.getElementById('forgotModal').classList.remove('hidden');
@@ -785,19 +794,17 @@
             const pin = document.getElementById('forgotPin').value;
             const newPass = document.getElementById('forgotNewPass').value;
 
-            const adminObj = state.admins.find(a => a.username === u && a.pin === pin);
-            if(adminObj) {
-                adminObj.password = newPass;
+            const admin = state.admins.find(a => a.username === u && a.pin === pin);
+            if(admin) {
+                admin.password = newPass;
                 saveState();
-                alert("পাসওয়ার্ড সফলভাবে পরিবর্তন করা হয়েছে! নতুন পাসওয়ার্ড দিয়ে লগইন করুন।");
+                alert("পাসওয়ার্ড সফলভাবে পরিবর্তন করা হয়েছে। নতুন পাসওয়ার্ড দিয়ে লগইন করুন।");
                 closeForgotModal();
-                toggleAdminView();
             } else {
-                alert("ইউজারনেম অথবা সিকিউরিটি পিন মেলেনি!");
+                alert("ইউজারনেম বা সিকিউরিটি পিন মিলেনি!");
             }
         }
 
-        // User Registration Handler
         function openRegisterModal() {
             document.getElementById('registerModal').classList.remove('hidden');
             document.getElementById('registerModal').classList.add('flex');
@@ -813,33 +820,32 @@
             const gmail = document.getElementById('regGmail').value;
 
             if(!name || !gmail) {
-                alert("আপনার নাম ও জিমেইল অ্যাড্রেস সঠিকভাবে প্রদান করুন!");
+                alert("আপনার নাম এবং জিমেইল প্রদান করুন।");
                 return;
             }
 
-            state.members.push({ name, mobile: "N/A", nid: gmail });
-            alert("আপনার আবেদন সফলভাবে জমা হয়েছে। অ্যাডমিন রিভিউ করে অন্তর্ভুক্ত করবে।");
-            document.getElementById('regName').value = '';
-            document.getElementById('regGmail').value = '';
-            closeRegisterModal();
+            state.members.push({ name, mobile: '-', nid: gmail });
             saveState();
+            alert("রেজিস্ট্রেশন আবেদন সম্পন্ন হয়েছে। সাধারণ সদস্য তালিকায় যুক্ত করা হয়েছে।");
+            closeRegisterModal();
         }
 
-        // Export Data
+        // Export Backup and Download PDF
         function exportData() {
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state));
-            const dlAnchorElem = document.createElement('a');
-            dlAnchorElem.setAttribute("href", dataStr);
-            dlAnchorElem.setAttribute("download", `samity_backup_${new Date().toISOString().split('T')[0]}.json`);
-            dlAnchorElem.click();
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", `samity_backup_${new Date().toISOString().split('T')[0]}.json`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
         }
 
-        // Download PDF Function
         function downloadPDF() {
             const element = document.getElementById('pdfContent');
             const opt = {
-                margin:       0.2,
-                filename:     `Samity_Ledger_${new Date().toISOString().split('T')[0]}.pdf`,
+                margin:       0.5,
+                filename:     `Samity_Report_${new Date().toISOString().split('T')[0]}.pdf`,
                 image:        { type: 'jpeg', quality: 0.98 },
                 html2canvas:  { scale: 2 },
                 jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
@@ -847,7 +853,7 @@
             html2pdf().set(opt).from(element).save();
         }
 
-        // Self Initialization
+        // Initialize Application
         window.onload = init;
     </script>
 </body>
