@@ -868,36 +868,24 @@
         }
 
         function addAdminUser() {
-    const name = document.getElementById('newAdminName').value;
-    const username = document.getElementById('newAdminUsername').value;
-    const mobile = document.getElementById('newAdminMobile').value;
-    const password = document.getElementById('newAdminPassword').value;
-    const pin = document.getElementById('newAdminSecurityPin').value;
-    const role = document.getElementById('newAdminRole').value;
-
-    if (!name || !username || !password || !pin) {
-        alert("দয়া করে সকল ঘর সঠিকভাবে পূরণ করুন!");
-        return;
-    }
+    // এখানে আপনার নিজের পছন্দমতো তথ্যগুলো লিখে দিন
+    const name = "আপনার নাম";            // আপনার নিজের নাম দিন
+    const username = "myuser";          // আপনার পছন্দের ইউজারনেম দিন
+    const mobile = "01700000000";       // আপনার মোবাইল নম্বর দিন
+    const password = "mypassword123";   // আপনার পছন্দের পাসওয়ার্ড দিন
+    const pin = "1234";                 // পছন্দের ৪ ডিজিটের পিন দিন
+    const role = "superadmin";          // প্রধান অ্যাডমিন বানাতে 'superadmin' বা সাধারণের জন্য 'admin'
 
     if (state.admins.some(a => a.username === username)) {
-        alert("এই ইউজারনেমটি ইতিমধ্যেই ব্যবহৃত হয়েছে!");
+        alert("এই ইউজারনেমটি ইতিমধ্যেই ব্যবহৃত হয়েছে!");
         return;
     }
 
     state.admins.push({ name, username, mobile, password, pin, role });
-    alert("নতুন অ্যাডমিন সফলভাবে যোগ করা হয়েছে!");
+    alert("নতুন অ্যাডমিন সফলভাবে যোগ করা হয়েছে!");
 
-    // ডাটা ব্রাউজারে সেভ এবং পেজে আপডেট করার জন্য
     saveState();
     render();
-
-    // ইনপুট বক্সগুলো খালি করার জন্য
-    document.getElementById('newAdminName').value = '';
-    document.getElementById('newAdminUsername').value = '';
-    document.getElementById('newAdminMobile').value = '';
-    document.getElementById('newAdminPassword').value = '';
-    document.getElementById('newAdminSecurityPin').value = '';
 }
 
         function deleteAdmin(index) {
