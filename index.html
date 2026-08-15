@@ -868,34 +868,37 @@
         }
 
         function addAdminUser() {
-            const name = document.getElementById('newAdminName').value;
-            const username = document.getElementById('newAdminUsername').value;
-            const mobile = document.getElementById('newAdminMobile').value;
-            const password = document.getElementById('newAdminPassword').value;
-            const pin = document.getElementById('newAdminSecurityPin').value;
-            const role = document.getElementById('newAdminRole').value;
+    const name = document.getElementById('newAdminName').value;
+    const username = document.getElementById('newAdminUsername').value;
+    const mobile = document.getElementById('newAdminMobile').value;
+    const password = document.getElementById('newAdminPassword').value;
+    const pin = document.getElementById('newAdminSecurityPin').value;
+    const role = document.getElementById('newAdminRole').value;
 
-            if(!name || !username || !password || !pin) {
-                alert("দয়া করে সকল ঘর সঠিকভাবে পূরণ করুন।");
-                return;
-            }
+    if (!name || !username || !password || !pin) {
+        alert("দয়া করে সকল ঘর সঠিকভাবে পূরণ করুন!");
+        return;
+    }
 
-            if(state.admins.some(a => a.username === username)) {
-                alert("এই ইউজারনেমটি ইতিমধ্যেই ব্যবহৃত হয়েছে।");
-                return;
-            }
+    if (state.admins.some(a => a.username === username)) {
+        alert("এই ইউজারনেমটি ইতিমধ্যেই ব্যবহৃত হয়েছে!");
+        return;
+    }
 
-            state.admins.push({ name, username, mobile, password, pin, role });
-            alert("নতুন অ্যাডমিন সফলভাবে যোগ করা হয়েছে।");
+    state.admins.push({ name, username, mobile, password, pin, role });
+    alert("নতুন অ্যাডমিন সফলভাবে যোগ করা হয়েছে!");
 
-            document.getElementById('newAdminName').value = '';
-            document.getElementById('newAdminUsername').value = '';
-            document.getElementById('newAdminMobile').value = '';
-            document.getElementById('newAdminPassword').value = '';
-            document.getElementById('newAdminSecurityPin').value = '';
+    // ডাটা ব্রাউজারে সেভ এবং পেজে আপডেট করার জন্য
+    saveState();
+    render();
 
-            saveState();
-        }
+    // ইনপুট বক্সগুলো খালি করার জন্য
+    document.getElementById('newAdminName').value = '';
+    document.getElementById('newAdminUsername').value = '';
+    document.getElementById('newAdminMobile').value = '';
+    document.getElementById('newAdminPassword').value = '';
+    document.getElementById('newAdminSecurityPin').value = '';
+}
 
         function deleteAdmin(index) {
             if(confirm("আপনি কি নিশ্চিত যে এই অ্যাডমিন অ্যাকাউন্টটি বাতিল করতে চান?")) {
