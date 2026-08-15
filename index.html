@@ -8,8 +8,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Html2Pdf Library -->
+    <!-- Html2Pdf & Html2Canvas Library for PDF and PNG export -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <style>
         @keyframes fadeIn {
@@ -26,9 +27,9 @@
     <!-- Header Section -->
     <header class="bg-indigo-900 text-white shadow-lg p-4 flex justify-between items-center sticky top-0 z-50">
         <div class="flex items-center space-x-3">
-            <div id="displayLogoContainer">
+            <div id="displayLogoContainer" class="flex items-center gap-2">
                 <i class="fa-solid fa-users-gear text-3xl text-amber-400 animated-logo" id="defaultLogo"></i>
-                <img id="customLogo" class="h-10 w-10 object-cover rounded-full hidden" src="" alt="Logo">
+                <img id="customLogo" class="h-10 w-10 object-cover rounded-full hidden border-2 border-amber-400" src="" alt="Logo">
             </div>
             <div>
                 <h1 id="headerSamityName" class="text-xl font-bold tracking-wide">ঐক্য পরিবার সমিতি</h1>
@@ -86,12 +87,17 @@
         <!-- Main Content Panel -->
         <main class="md:col-span-3 bg-white p-6 rounded-xl shadow-md min-h-[500px]" id="pdfContent">
 
-            <!-- Global Action Bar (PDF Download) -->
+            <!-- Global Action Bar (PDF & PNG Download) -->
             <div class="flex justify-between items-center pb-4 mb-4 border-b">
                 <h2 id="sectionTitle" class="text-xl font-bold text-slate-800">ড্যাশবোর্ড ওভারভিউ</h2>
-                <button onclick="downloadPDF()" class="bg-red-600 text-white text-sm px-4 py-2 rounded-lg hover:bg-red-700 transition flex items-center gap-2">
-                    <i class="fa-solid fa-file-pdf"></i> PDF ডাউনলোড
-                </button>
+                <div class="flex gap-2">
+                    <button onclick="downloadPNG()" class="bg-emerald-600 text-white text-sm px-3 py-1.5 rounded-lg hover:bg-emerald-700 transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-file-image"></i> PNG সেভ
+                    </button>
+                    <button onclick="downloadPDF()" class="bg-red-600 text-white text-sm px-3 py-1.5 rounded-lg hover:bg-red-700 transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-file-pdf"></i> PDF ডাউনলোড
+                    </button>
+                </div>
             </div>
 
             <!-- Tab 1: Dashboard Home -->
@@ -115,7 +121,7 @@
                     </div>
                 </div>
 
-                <!-- NEW SECTION: Executive Committee Leadership Display -->
+                <!-- Executive Committee Leadership Display -->
                 <div class="mb-6 bg-slate-50 border border-indigo-100 p-4 rounded-xl shadow-sm">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="font-bold text-indigo-900 flex items-center gap-2">
@@ -335,26 +341,33 @@
             <!-- Tab 7: Samity Settings -->
             <div id="samitySettingsTab" class="tab-content hidden">
                 <h3 class="font-bold mb-3">সমিতির নাম ও লোগো আপডেট</h3>
-                <div class="space-y-4 max-w-md">
+                <div class="space-y-4 max-w-md bg-slate-50 p-4 rounded-lg border">
                     <div>
                         <label class="block text-xs font-bold mb-1">সমিতির নাম:</label>
                         <input type="text" id="settingSamityName" class="w-full p-2 border rounded text-sm">
                     </div>
                     <div>
                         <label class="block text-xs font-bold mb-1">লোগো ছবি সিলেক্ট করুন (PNG/JPG):</label>
-                        <input type="file" id="settingLogoFile" accept="image/*" class="w-full p-1.5 border rounded text-sm bg-white">
+                        <input type="file" id="settingLogoFile" accept="image/png, image/jpeg, image/jpg" class="w-full p-1.5 border rounded text-sm bg-white">
+                        <p class="text-[11px] text-slate-500 mt-1">* আপলোডকৃত লোগোটি সমিতির নামের সাথে সাথে সাথে সেভ হয়ে যাবে।</p>
                     </div>
-                    <button onclick="saveSamitySettings()" class="bg-indigo-600 text-white px-4 py-2 rounded text-sm">সংরক্ষণ করুন</button>
+                    <button onclick="saveSamitySettings()" class="bg-indigo-600 text-white px-4 py-2 rounded text-sm font-semibold hover:bg-indigo-700 transition">সংরক্ষণ করুন</button>
                 </div>
             </div>
 
             <!-- Tab 8: Backup System -->
             <div id="backupTab" class="tab-content hidden">
-                <h3 class="font-bold mb-3">ডাটাবেজ ব্যাকআপ সেকশন</h3>
-                <p class="text-xs text-slate-500 mb-4">আপনার সমস্ত সদস্য ডাটা ফাইল হিসেবে নামিয়ে সুরক্ষিত জায়গায় রাখতে পারেন।</p>
-                <div class="flex gap-3">
-                    <button onclick="exportData()" class="bg-slate-800 text-white px-4 py-2 rounded text-sm flex items-center gap-2">
-                        <i class="fa-solid fa-download"></i> ব্যাকআপ নামান (JSON Export)
+                <h3 class="font-bold mb-3">ডাটাবেজ ব্যাকআপ ও সেভ সেকশন</h3>
+                <p class="text-xs text-slate-500 mb-4">আপনার সমস্ত সদস্য ডাটা ফাইল, ছবি ও রিপোর্ট সুরক্ষিতভাবে নামিয়ে রাখতে পারেন।</p>
+                <div class="flex flex-wrap gap-3">
+                    <button onclick="exportData()" class="bg-slate-800 hover:bg-slate-900 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-download"></i> ডাটা ব্যাকআপ নামান (JSON Export)
+                    </button>
+                    <button onclick="downloadPNG()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-file-image"></i> রিপোর্ট ছবি আকারে সেভ করুন (PNG)
+                    </button>
+                    <button onclick="downloadPDF()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-file-pdf"></i> রিপোর্ট PDF নামান
                     </button>
                 </div>
             </div>
@@ -502,7 +515,7 @@
 
         // Render All Views
         function render() {
-            // Header Info
+            // Header Info & Custom Logo Handling
             document.getElementById('headerSamityName').innerText = state.samityName;
             document.getElementById('settingSamityName').value = state.samityName;
 
@@ -524,7 +537,7 @@
             document.getElementById('totalChandaCollected').innerText = `৳ ${totalChanda.toLocaleString('bn-BD')}`;
             document.getElementById('chandaTotalSummary').innerText = `৳ ${totalChanda.toLocaleString('bn-BD')}`;
 
-            // RENDER DASHBOARD LEADERSHIP CARDS (সভাপতি, সাধারণ সম্পাদক ইত্যাদি)
+            // RENDER DASHBOARD LEADERSHIP CARDS
             let leadersHtml = "";
             if(state.committee.length === 0) {
                 leadersHtml = `<p class="text-xs text-slate-400 col-span-full">পরিচালনা কমিটির কোনো সদস্য যুক্ত করা হয়নি।</p>`;
@@ -891,6 +904,7 @@
             }
         }
 
+        // SAVE SAMITY NAME & LOGO
         function saveSamitySettings() {
             const name = document.getElementById('settingSamityName').value;
             const fileInput = document.getElementById('settingLogoFile');
@@ -902,12 +916,12 @@
                 reader.onload = function(e) {
                     state.logoUrl = e.target.result;
                     saveState();
-                    alert("সমিতির সেটিং আপডেট হয়েছে।");
+                    alert("সমিতির নাম ও লোগো সফলভাবে সেভ করা হয়েছে।");
                 };
                 reader.readAsDataURL(fileInput.files[0]);
             } else {
                 saveState();
-                alert("সমিতির সেটিং আপডেট হয়েছে।");
+                alert("সমিতির তথ্য আপডেট হয়েছে।");
             }
         }
 
@@ -1066,7 +1080,7 @@
             closeRegisterModal();
         }
 
-        // Export Backup and Download PDF
+        // EXPORT DATA, PNG IMAGE & DOWNLOAD PDF
         function exportData() {
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state));
             const downloadAnchor = document.createElement('a');
@@ -1075,6 +1089,16 @@
             document.body.appendChild(downloadAnchor);
             downloadAnchor.click();
             downloadAnchor.remove();
+        }
+
+        function downloadPNG() {
+            const element = document.getElementById('pdfContent');
+            html2canvas(element, { scale: 2 }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `Samity_Report_${new Date().toISOString().split('T')[0]}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
         }
 
         function downloadPDF() {
